@@ -1,0 +1,235 @@
+/* common */
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu,
+    Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  line-height: 1.6;
+  overflow-y: hidden;
+}
+
+body, p, h1, h2, h3, h4, h5, h6, ul, ol, dl, li, dt, dd {
+  /* 默认有边距，都要清除 */
+  margin: 0;
+  padding: 0;
+  /*字体设置*/
+  font-size: 14px;
+  font-family: Arial, serif;
+  /* 去掉列表的原点 */
+  list-style: none;
+  /* 默认鼠标 */
+  cursor: default;
+}
+
+@import url('../assets/fonts/iconfont/iconfont.css');
+
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,400italic,500,500italic,700,700italic,900,900italic,300italic,300,100italic,100);
+
+/*行内块元素*/
+input,
+img,
+button {
+  margin: 0;
+  padding: 0;
+  border: 0 none;
+  outline-style: none;
+  vertical-align: bottom;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.mr-10 {
+  margin-right: 10px !important;
+}
+
+.mt-10 {
+  margin-top: 10px !important;
+}
+
+.mb-10 {
+  margin-bottom: 10px !important;
+}
+
+.mr-5 {
+  margin-right: 5px !important;
+}
+
+.fr {
+  float: right;
+}
+
+.fl {
+  float: left;
+}
+
+.tar {
+  text-align: right;
+}
+
+.tac {
+  text-align: center;
+}
+
+.dn {
+  display: none !important;
+}
+
+.db {
+  display: block !important;
+}
+
+.dib {
+  display: inline-block !important;
+}
+
+.vh {
+  visibility: hidden
+}
+
+.vat {
+  vertical-align: top;
+}
+
+.vam {
+  vertical-align: middle;
+}
+
+#root {
+  height: 100%;
+}
+
+.tableTitle {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.tableLayout {
+  padding: 16px;
+}
+
+.cardListView {
+  > li {
+    width: 278px;
+    border-radius: 8px;
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 24px;
+    margin-top: 24px;
+    background-color: #fff;
+    cursor: pointer;
+
+    > img {
+      width: 100%;
+      height: 154px;
+      display: block;
+      border-radius: 8px 8px 0px 0px;
+    }
+
+    .info {
+      height: 92px;
+      padding: 24px 20px 0;
+      box-sizing: border-box;
+      overflow : hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+
+      .tit {
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 24px;
+        color: rgba(0, 0, 0, 0.85);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .location {
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 12px;
+        line-height: 14px;
+        letter-spacing: -0.5px;
+        color: #262626;
+        margin-top: 8px;
+      }
+    }
+  }
+}
+
+.tabs {
+  &.ant-tabs-top > .ant-tabs-nav {
+    border-bottom: 0 none;
+    margin-bottom: 0;
+
+    &::before {
+      border-bottom: 0 none;
+    }
+
+    .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+      color: #E0BB7C;
+    }
+  }
+
+  .ant-tabs-ink-bar {
+    background-color: #E0BB7C;
+  }
+}
+
+.ant-btn-primary {
+  &.ant-btn-primary {
+    background: rgba(224, 187, 124, 1);
+    border-color:rgba(224, 187, 124, 1);
+
+    &:hover, &:focus {
+      background: rgba(224, 187, 124, 1);
+      border-color:rgba(224, 187, 124, 1);
+    }
+  }
+}
+
+.detailFooter {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 65px;
+  background-color: #fff;
+  box-shadow: 0px -1px 0px rgba(0, 0, 0, 0.1);
+  padding-top: 18px;
+  text-align: center;
+
+  button {
+    padding: 4px 30px;
+    margin: 0 10px;
+  }
+}
+
+.pagination {
+  position: fixed;
+  right: 24px;
+  bottom: 20px;
+
+  .ant-pagination-item-active {
+    background-color: transparent;
+    border-color: #E0BB7C;
+
+    > a {
+      color: #E0BB7C;
+    }
+  }
+}

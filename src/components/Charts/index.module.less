@@ -1,0 +1,42 @@
+.dashboardRingChart {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  padding-left: 40%;
+  // overflow: hidden;
+  padding-top: 30px;
+
+  > canvas {
+    // width: 240px;
+    // height: 240px;
+    width: 48%;
+    position: absolute;
+    top: 35%;
+    transform: translateY(-50%);
+    left: 0;
+    display: inline-block;
+  }
+
+  .list {
+    display: inline-block;
+    width: 100%;
+
+    > li {
+      font-family: Roboto;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 15px;
+      line-height: 20px;
+      color: #000000;
+      padding-left: 25%;
+      margin-top: 15px;
+
+      > span {
+        width: 16px;
+        height: 16px;
+        display: inline-block;
+        margin-right: 8px;
+      }
+    }
+  }
+}

@@ -1,0 +1,42 @@
+.search-form {
+  padding: 24px;
+  background: #fbfbfb;
+  border: 1px solid #d9d9d9;
+  border-radius: 2px;
+  margin-bottom: 20px;
+
+  :global {
+    .ant-form-item {
+      display: flex;
+    }
+
+    .ant-form-item-control-wrapper {
+      flex: 1;
+    }
+  }
+}
+
+.search-btns {
+  text-align: right;
+
+  .clean {
+    margin: 0 8px;
+  }
+
+  .expand {
+    font-size: 12px;
+  }
+}
+
+.pageTable {
+  margin: 16px;
+  padding: 24px 24px;
+  background-color: #fff;
+
+  :global {
+    .ant-table {
+      overflow-y: auto;
+      height: calc(100vh - 260px);
+    }
+  }
+}
