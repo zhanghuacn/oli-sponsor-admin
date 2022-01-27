@@ -1,8 +1,7 @@
 import { Input, message, Tabs } from "antd"
 import classNames from "classnames"
-import { useEffect, useRef, useState } from "react"
+import { useEffect } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
-import { ILoadingLayoutRef, LoadingLayout } from "../../components/Layout/LoadingLayout"
 import { IGlobalSearchModel } from "../../models"
 import { AdminService } from "../../services"
 import css from './index.module.less'
@@ -15,7 +14,7 @@ interface ISearchState {
   tabKey: string
   loading: boolean
   get isShowEvents(): boolean
-  get isShowNews(): boolean
+  get isShowProducts(): boolean
   setTabKey: (key: string) => void
   search: (keyword: string) => void
 }
@@ -23,7 +22,6 @@ interface ISearchState {
 function Search() {
   const navigate = useNavigate()
   const location = useLocation()
-  const layout = useRef<ILoadingLayoutRef>()
   const state = useLocalObservable<ISearchState>(() => ({
     data: undefined,
     tabKey: 'all',
@@ -32,9 +30,9 @@ function Search() {
       const { data } = state as ISearchState
       return data?.events && data?.events?.length > 0 || false
     },
-    get isShowNews() {
+    get isShowProducts() {
       const { data } = state as ISearchState
-      return data?.news && data?.news?.length > 0 || false
+      return data?.products && data?.products?.length > 0 || false
     },
     setTabKey(key: string) {
       state.tabKey = key
@@ -86,7 +84,7 @@ function Search() {
           <Tabs.TabPane tab="All" key="all" />
           {state.isShowEvents && <Tabs.TabPane tab="Events" key="events" />}
           {/* {isShowStaffs && <Tabs.TabPane tab="Person" key="person" />} */}
-          {state.isShowNews && <Tabs.TabPane tab="News" key="news" />}
+          {state.isShowProducts && <Tabs.TabPane tab="Products" key="products" />}
         </Tabs>
       </div>
 
@@ -117,25 +115,6 @@ function Search() {
                         {v.begin_time}
                       </span>
                     </div>
-                    <div className={css.total}>
-                      <div className={css.item}>
-                        <div className={css.top}>
-                          Total income
-                        </div>
-                        <div className={css.bottom}>
-                          ${v.total_income}
-                        </div>
-                      </div>
-
-                      <div className={css.item}>
-                        <div className={css.top}>
-                          Participates
-                        </div>
-                        <div className={css.bottom}>
-                          {v.participates}
-                        </div>
-                      </div>
-                    </div>
                   </div>
                 </li>
               ))}
@@ -143,54 +122,42 @@ function Search() {
           </>
         )}
 
-        {/* {isShowStaffs && (tabKey === 'all' || tabKey === 'person') && (
+        {state.isShowEvents && (state.tabKey === 'all' || state.tabKey === 'products') && (
           <>
             <div className={css.topTitle}>
-              Person
+              Products
             </div>
-            <ul className={css.eventsWrapper}>
-              {data?.staffs?.map((v) => (
+            <ul className={classNames(css.eventsWrapper, css.productsWrapper)}>
+              {state.data?.products?.map((v) => (
                 <li
                   key={v.id}
-                  // onClick={() => {
-                  //   navigate(`/admin/manager?id=${v.id}`)
-                  // }}
                 >
-                  <img src={v.avatar} />
-                  <div className={classNames(css.info, css.personInfo)}>
+                  <img src={v.image} />
+                  <div className={css.info}>
                     <div className={css.tit}>
                       {v.name}
                     </div>
                     <div className={css.location}>
-                      {v.profile}
-                    </div>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </>
-        )} */}
-
-        {state.isShowNews && (state.tabKey === 'all' || state.tabKey === 'news') && (
-          <>
-            <div className={css.topTitle}>
-              News
-            </div>
-            <ul className={css.eventsWrapper}>
-              {state.data?.news?.map((v) => (
-                <li
-                  key={v.id}
-                  onClick={() => {
-                    navigate(`/news?id=${v.id}`)
-                  }}
-                >
-                  <img src={v.image} />
-                  <div className={classNames(css.info, css.personInfo)}>
-                    <div className={css.tit}>
-                      {v.title}
-                    </div>
-                    <div className={css.location}>
                       {v.description}
+                    </div>
+                    <div className={css.total}>
+                      <div className={css.item}>
+                        <div className={css.top}>
+                          Total income
+                        </div>
+                        <div className={css.bottom}>
+                          ${v.income}
+                        </div>
+                      </div>
+
+                      <div className={css.item}>
+                        <div className={css.top}>
+                          Sold
+                        </div>
+                        <div className={css.bottom}>
+                          {v.sold}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </li>

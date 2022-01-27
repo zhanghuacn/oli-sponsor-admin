@@ -17,13 +17,7 @@ export interface IGlobalSearchEventsModel extends IEventsModel {
 
 export interface IGlobalSearchModel {
   events: IGlobalSearchEventsModel[]
-  staffs: IStaffModel[]
-  news: {
-    id: number
-    title: string
-    image: string
-    description: string
-  }[]
+  products: IDashboardProductModel[]
 }
 
 export interface IRegisterParams {
@@ -91,6 +85,17 @@ export interface IStaffModel {
   created_at: string
 }
 
+export interface IDashboardProductModel {
+  id: number
+  image: string
+  name: string
+  description: string
+  // 销量
+  sold: number
+  // 收入
+  income: number
+}
+
 export interface IDashboardModel {
   // 活动
   events: IEventsModel[]
@@ -98,16 +103,7 @@ export interface IDashboardModel {
   received: number[]
   // 捐款来源
   sources: IDashboardSourceModel[]
-  products: {
-    id: number
-    image: string
-    name: string
-    description: string
-    // 销量
-    sold: number
-    // 收入
-    income: number
-  }[]
+  products: IDashboardProductModel[]
 }
 
 export interface IAdminManagerCreateParams {
