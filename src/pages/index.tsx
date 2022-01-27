@@ -18,7 +18,6 @@ const Login = defaultFallbackLoadable(() => import('../pages/Login'))
 const AdminManager = defaultFallbackLoadable(() => import('../pages/AdminManager'))
 const Events = defaultFallbackLoadable(() => import('../pages/Events'))
 const EventsDetail = defaultFallbackLoadable(() => import('./Events/Detail'))
-const EventsEdit = defaultFallbackLoadable(() => import('./Events/Edit'))
 const Register = defaultFallbackLoadable(() => import('../pages/Register'))
 const Search = defaultFallbackLoadable(() => import('../pages/Search'))
 
@@ -30,8 +29,6 @@ function Routes() {
     { path: '/admin', element: <AdminManager /> },
     { path: '/events', element: <Events /> },
     { path: '/events/detail/:id', element: <EventsDetail /> },
-    { path: '/events/edit', element: <EventsEdit /> },
-    { path: '/events/edit/:id', element: <EventsEdit /> },
     { path: '/register', element: <Register /> },
     { path: '/search', element: <Search /> },
   ])

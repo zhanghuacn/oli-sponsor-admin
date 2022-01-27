@@ -66,7 +66,6 @@ function AdminManager() {
 
   useEffect(() => {
     page.refresh()
-    store.adminRoleMap.refresh()
   }, [])
 
   return (

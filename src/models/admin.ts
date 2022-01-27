@@ -113,25 +113,3 @@ export interface IDashboardModel {
 export interface IAdminManagerCreateParams {
   username: string
 }
-
-export interface IAdminPermissionModel {
-  id: number
-  name: string
-  created_at: string
-}
-
-export interface IAdminPermissionCreateParams {
-  name: string
-}
-
-export interface IAdminRoleModel {
-  id: number
-  name: string
-  permissions: string[]
-  created_at: string
-}
-
-export interface IAdminRoleCreateParams {
-  name: string
-  permissions: string[]
-}

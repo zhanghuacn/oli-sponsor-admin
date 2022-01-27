@@ -1,4 +1,4 @@
-import { IAdminManagerCreateParams, IAdminPermissionCreateParams, IAdminPermissionModel, IAdminRoleCreateParams, IAdminRoleModel, IAuthUserModel, IDashboardModel, IGlobalSearchModel, ILoginParams, IPageModel, IPageParams, IRegisterParams, IStaffModel } from "../models"
+import { IAdminManagerCreateParams, IAuthUserModel, IDashboardModel, IGlobalSearchModel, ILoginParams, IPageModel, IPageParams, IRegisterParams, IStaffModel } from "../models"
 import { HttpRequest } from "../utils"
 
 class AdminService {
@@ -52,7 +52,7 @@ class AdminService {
    * @returns
    */
   async addStaff(p: IAdminManagerCreateParams) {
-    return await HttpRequest.post('/api/v1/staffs', p)
+    return await HttpRequest.post('/api/v1/manager', p)
   }
 
   /**
@@ -61,7 +61,7 @@ class AdminService {
    * @returns
    */
   async removeStaffById(id: number) {
-    return await HttpRequest.delete(`/api/v1/staffs/${id}`)
+    return await HttpRequest.delete(`/api/v1/manager/${id}`)
   }
 
   /**
@@ -70,81 +70,7 @@ class AdminService {
    * @returns
    */
   async getStaffPage(p: IPageParams): Promise<IPageModel<IStaffModel>> {
-    return await HttpRequest.get('/api/v1/staffs', p)
-  }
-
-  /**
-   * 获取权限分页
-   * @param p
-   * @returns
-   */
-  async getPermissionPage(p: IPageParams): Promise<IPageModel<IAdminPermissionModel>> {
-    return await HttpRequest.get('/api/v1/permissions', p)
-  }
-
-  /**
-   * 创建权限
-   * @param p
-   * @returns
-   */
-  async createPermission(p: IAdminPermissionCreateParams) {
-    return await HttpRequest.post('/api/v1/permissions', p)
-  }
-
-  /**
-   * 更新权限
-   * @param id 权限 ID
-   * @param p
-   * @returns
-   */
-  async updatePermissionById(id: number, p: IAdminPermissionCreateParams) {
-    return await HttpRequest.put(`/api/v1/permissions/${id}`, p)
-  }
-
-  /**
-   * 删除权限
-   * @param id 权限 ID
-   * @returns
-   */
-  async removePermissionById(id: number) {
-    return await HttpRequest.delete(`/api/v1/permissions/${id}`)
-  }
-
-  /**
-   * 获取角色分页
-   * @param p
-   * @returns
-   */
-   async getRolePage(p: IPageParams): Promise<IPageModel<IAdminRoleModel>> {
-    return await HttpRequest.get('/api/v1/roles', p)
-  }
-
-  /**
-   * 创建角色
-   * @param p
-   * @returns
-   */
-  async createRole(p: IAdminRoleCreateParams) {
-    return await HttpRequest.post('/api/v1/roles', p)
-  }
-
-  /**
-   * 更新角色
-   * @param id 角色 ID
-   * @param p
-   * @returns
-   */
-  async updateRoleById(id: number, p: IAdminRoleCreateParams) {
-    return await HttpRequest.put(`/api/v1/roles/${id}`, p)
-  }
-
-  /**
-   * 删除角色
-   * @param id 角色 ID
-   * @returns
-   */
-  async removeRoleById(id: number) {
-    return await HttpRequest.delete(`/api/v1/roles/${id}`)
+    return await HttpRequest.get('/api/v1/manager', p)
   }
 }
 

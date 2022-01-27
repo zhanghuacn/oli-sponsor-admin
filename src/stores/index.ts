@@ -1,8 +1,7 @@
 import { makeAutoObservable, runInAction } from "mobx"
 import { isArray } from "underscore"
-import { IAdminPermissionModel, IAdminRoleModel, IPageModel, ISponsorModel, IStaffModel } from "../models"
-import { AdminService, EventsService } from "../services"
-import { PageStore } from "./page"
+import { IPageModel, IStaffModel } from "../models"
+import { AdminService } from "../services"
 import UserStore from "./user"
 
 type IModelDataMapQuery<T> = () => Promise<T[] | IPageModel<T>>
@@ -74,24 +73,6 @@ export class Store {
 
   user: UserStore = new UserStore()
 
-  // 管理员权限
-  adminPermissionMap = new ModelDataMap<IAdminPermissionModel>({
-    key: 'name',
-    value: 'name',
-    query: () => AdminService.getPermissionPage({
-      per_page: 500
-    })
-  })
-
-  // 管理员角色
-  adminRoleMap = new ModelDataMap<IAdminRoleModel>({
-    key: 'name',
-    value: 'name',
-    query: () => AdminService.getRolePage({
-      per_page: 500
-    }),
-  })
-
   // 管理员角色
   staffMap = new ModelDataMap<IStaffModel>({
     key: 'name',
@@ -99,12 +80,5 @@ export class Store {
     query: () => AdminService.getStaffPage({
       per_page: 500
     }),
-  })
-
-  // 赞助商列表
-  sponsorMap = new ModelDataMap<ISponsorModel>({
-    key: 'id',
-    value: 'name',
-    query: () => EventsService.getSponsors()
   })
 }

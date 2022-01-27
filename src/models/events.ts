@@ -1,8 +1,8 @@
-import { IDashboardSourceModel, IStaffModel } from ".";
+import { IStaffModel } from ".";
 
 export type TEventsStatus = 'WAIT' | 'REVIEW' | 'PASSED' | 'REFUSE'
 
-export interface IEventsModel extends IEventsExtraModel {
+export interface IEventsModel {
   id: number
   // 活动图片
   image: string
@@ -16,15 +16,6 @@ export interface IEventsModel extends IEventsExtraModel {
   begin_time: string
   // 活动结束时间
   end_time: string
-  // 是否参与到活动
-  is_current: boolean
-  // 申请数量
-  applies_count: number
-  // 参与人数
-  tickets_count: number
-  // 审核状态
-  status: TEventsStatus
-  state: 'POST' | 'WAIT' | 'CHECK' | 'PROGRESS' | 'PAST'
 }
 
 export interface IEventsLotteryModel {
@@ -39,6 +30,19 @@ export interface IEventsLotteryModel {
   draw_time: string
 }
 
+export interface IEventsLotteryPrizeModel {
+  id: number
+  name: string
+  description: string
+  // 库存
+  stock: number
+  // 价格
+  price: number
+  // 赞助商
+  // sponsor: ISponsorModel[]
+  images: string[]
+}
+
 export interface IEventsLotteryDetailModel extends IEventsLotteryModel {
   description: string
   begin_time: string
@@ -51,50 +55,7 @@ export interface IEventsLotteryDetailModel extends IEventsLotteryModel {
   draw_time: string
   images: string[]
   // 奖品列表
-  prizes: {
-    id: number
-    name: string
-    description: string
-    // 库存
-    stock: number
-    // 价格
-    price: number
-    // 赞助商
-    sponsor: ISponsorModel[]
-    images: string[]
-    // 中奖名单
-    winners: {
-      id: number
-      name: string
-      avatar: string
-      profile: string
-    }[]
-  }[]
-}
-
-export interface IEventsExtraModel {
-  lotteries?: IEventsLotteryModel[]
-
-  sales?: {
-    id: number
-    // 商品名称
-    name: string
-    // 商品图片
-    image: string
-    // 库存数量
-    stock: number
-    // 销售数量
-    sale_num: number
-    // 销售金额
-    income: number
-  }[]
-
-  statistics?: {
-    // 捐赠总额
-    income: number
-    // 捐赠构成
-    constitute: IDashboardSourceModel[]
-  }
+  prizes: IEventsLotteryPrizeModel[]
 }
 
 export interface IEventsDetailModel {
@@ -129,46 +90,9 @@ export interface IEventsDetailModel {
     description: string
     stock: number
     price: number
-    sponsor: ISponsorModel
+    // sponsor: ISponsorModel
     content: string
     images: string[]
   }[]
   staffs: IStaffModel[]
-}
-
-export interface IEventsApplyUserModel {
-  id: number
-  name: string
-  avatar: string
-  profile: string
-  status: 'WAIT' | 'PASSED' | 'REFUSE'
-}
-
-export interface IEventsApplyUserAuditParams {
-  status: 'PASSED' | 'REFUSE'
-  remark: string
-}
-
-export interface IEventsUserTicketsModel {
-  id: number
-  name: string
-  avatar: string
-  // 门票码
-  ticket: string
-  // 组别
-  group: {
-    id: number
-    name: string
-  }
-}
-
-export interface ISponsorModel {
-  id: number
-  name: string
-  logo: string
-}
-
-export interface IEventsSaveModel {
-  id: number
-  status: 'WAIT' | 'REVIEW' | 'PASSED' | 'REFUSE'
 }

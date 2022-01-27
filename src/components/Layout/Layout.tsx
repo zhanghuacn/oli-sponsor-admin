@@ -21,10 +21,6 @@ const _siderNavList: ISiderNavOption[] = [
     path: '/',
     icon: <HomeOutlined />,
   }, {
-    title: 'News',
-    path: '/news',
-    icon: <FileTextOutlined />,
-  }, {
     title: 'Events',
     path: '/events',
     icon: <i className={classNames('iconfont', 'icon-event', css.siderIcon)} />,

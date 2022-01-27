@@ -1,46 +1,248 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import css from './index.module.less'
-import { Button, Carousel, Collapse, Steps } from 'antd'
+import { Button, Carousel, Col, Collapse, Form, Input, InputNumber, message, Modal, Row, Steps } from 'antd'
 import classNames from 'classnames'
-import { AuditOutlined, DeleteOutlined } from '@ant-design/icons'
+import { AuditOutlined } from '@ant-design/icons'
 import { ILoadingLayoutRef, LoadingLayout } from '../../components/Layout/LoadingLayout'
-import { IEventsDetailModel } from '../../models'
+import { IEventsDetailModel, IEventsLotteryPrizeModel } from '../../models'
 import { EventsService } from '../../services'
 import { MyBreadcrumb } from '../../components/Layout'
-import { MyButton } from '../../components/FormWapper'
+import editFormCss from '../../components/FormModal/index.module.less'
+import { useForm } from 'antd/lib/form/Form'
+import { MultiUpload, RichEditor } from '../../components/FormWapper'
+import { NamePath } from 'antd/lib/form/interface'
+import { observer, useLocalObservable } from 'mobx-react-lite'
+
+interface ISalesRenderProps {
+  name: NamePath
+  className?: string
+}
+
+interface IEventsDetailState {
+  step: number
+  visible: boolean
+  submitting: boolean
+  setStep: (step: number) => void
+  setVisible: (visible: boolean) => void
+  onEdit: () => void
+  submit: () => Promise<void>
+  refresh: () => void
+  data: IEventsDetailModel | undefined
+  get isShowSpecialty(): boolean | undefined
+  get isShowTimeline(): boolean | undefined
+  get isShowLotteries(): boolean | undefined
+  get isShowSales(): boolean | undefined
+  get isShowStaff(): boolean | undefined
+}
 
 function EventsDetail() {
   const navigate = useNavigate()
   const queryParams = useParams()
   const layout = useRef<ILoadingLayoutRef>()
-  const [ data, setData ] = useState<IEventsDetailModel>()
   const id = parseInt(queryParams.id || '')
-  const refresh = async () => {
-    layout.current?.setLoading(true)
-    EventsService.getDetailById(id)
-      .then((res) => {
-        setData(res)
-      })
-      .catch((err) => {
-        if(err instanceof Error) {
-          layout.current?.setError(err)
+  const [ form ] = useForm()
+  const state = useLocalObservable<IEventsDetailState>(() => ({
+    step: 0,
+    data: undefined,
+    visible: false,
+    submitting: false,
+    get isShowSpecialty() {
+      const { data } = state as IEventsDetailState
+      return data?.basic?.specialty && data?.basic?.specialty.length > 0
+    },
+    get isShowTimeline() {
+      const { data } = state as IEventsDetailState
+      return data?.basic?.timeline && data?.basic?.timeline.length > 0
+    },
+    get isShowLotteries() {
+      const { data } = state as IEventsDetailState
+      return data?.lotteries && data?.lotteries.length > 0
+    },
+    get isShowSales() {
+      const { data } = state as IEventsDetailState
+      return data?.sales && data?.sales.length > 0
+    },
+    get isShowStaff() {
+      const { data } = state as IEventsDetailState
+      return data?.staffs && data.staffs.length > 0
+    },
+    setStep(step: number) {
+      state.step = step
+    },
+    setVisible(visible: boolean) {
+      state.visible = visible
+    },
+    onEdit() {
+      state.visible = true
+      state.step = 0
+      form.resetFields()
+      const { data } = state
+      const initialValues: any = {}
+      if(data?.sales && data.sales?.length > 0) {
+        initialValues.sales = data.sales
+      }
+      const prizes = data?.lotteries?.reduce<IEventsLotteryPrizeModel[]>((res, v) => {
+        if(v.prizes?.length > 0) {
+          res.push(...v.prizes)
         }
-      })
-      .finally(() => {
-        layout.current?.setLoading(false)
-      })
-  }
+        return res
+      }, [])
+      if(prizes && prizes?.length > 0) {
+        initialValues.prizes = prizes
+      }
+      form.setFieldsValue(initialValues)
+    },
+    refresh() {
+      layout.current?.setLoading(true)
+      EventsService.getDetailById(id)
+        .then((res) => {
+          state.data = res
+        })
+        .catch((err) => {
+          if(err instanceof Error) {
+            layout.current?.setError(err)
+          }
+        })
+        .finally(() => {
+          layout.current?.setLoading(false)
+        })
+    },
+    async submit() {
+      try {
+        state.submitting = true
+        await form.validateFields()
+        const data = form.getFieldsValue(true)
+        await EventsService.updateById(id, data)
+        state.visible = false
+        form.resetFields()
+        state.step = 0
+        state.refresh()
+      } catch(err) {
+        if(err instanceof Error) {
+          message.error(err.message)
+        }
+      } finally {
+        state.submitting = false
+      }
+    }
+  }))
+  const renderSales = ({ name, className }: ISalesRenderProps) => (
+    <Form.List name={name}>
+      {(fields, { add, remove }) => (
+        <>
+          {fields.map((field) => (
+            <div className={css.lotteryItem} key={field.key}>
+              {/* <a className={css.close} onClick={() => {
+                remove(field.name)
+              }}>
+                <CloseCircleOutlined />
+              </a> */}
+              <Row gutter={10}>
+                <Col span={12}>
+                  <Form.Item
+                    {...field}
+                    label="Name"
+                    name={[field.name, 'name']}
+                    rules={[{ required: true }]}
+                  >
+                    <Input />
+                  </Form.Item>
+                </Col>
 
-  const isShowSpecialty = data?.basic?.specialty && data?.basic?.specialty.length > 0
-  const isShowTimeline = data?.basic?.timeline && data?.basic?.timeline.length > 0
-  const isShowLotteries = data?.lotteries && data?.lotteries.length > 0
-  const isShowSales = data?.sales && data?.sales.length > 0
-  const isShowStaff = data?.staffs && data.staffs.length > 0
+                {/* <Col span={6}>
+                  <Form.Item
+                    {...field}
+                    label="Sponsor"
+                    name={[field.name, 'sponsor', 'id']}
+                  >
+                    <Select>
+                      {store.sponsorMap.list?.map((v) => (
+                        <Select.Option key={v.id} value={v.id}>{v.name}</Select.Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </Col> */}
+
+                <Col span={6}>
+                  <Form.Item
+                    {...field}
+                    name={[field.name, "stock"]}
+                    label="Stock"
+                    rules={[
+                      { required: true }
+                    ]}
+                  >
+                    <InputNumber min={0} />
+                  </Form.Item>
+                </Col>
+
+                <Col span={6}>
+                  <Form.Item
+                    {...field}
+                    name={[field.name, "price"]}
+                    label="Price"
+                    rules={[
+                      { required: true }
+                    ]}
+                  >
+                    <InputNumber min={0} />
+                  </Form.Item>
+                </Col>
+
+                <Col span={24}>
+                  <Form.Item
+                    {...field}
+                    name={[field.name, "description"]}
+                    label="Description"
+                    rules={[
+                      { required: true }
+                    ]}
+                  >
+                    <Input.TextArea autoSize={{ minRows: 2 }} />
+                  </Form.Item>
+                </Col>
+
+                <Col span={24}>
+                  <Form.Item
+                    {...field}
+                    name={[field.name, "content"]}
+                    label="Content"
+                  >
+                    <RichEditor />
+                  </Form.Item>
+                </Col>
+
+                <Col span={24}>
+                  <Form.Item
+                    {...field}
+                    name={[field.name, "images"]}
+                    label={(
+                      <>
+                        Cover pictures
+                        <span className={css.privateDesc}>
+                          You can upload 1~5pictures to describe your event
+                        </span>
+                      </>
+                    )}
+                    rules={[
+                      { required: true, message: 'Please enter cover pictures' }
+                    ]}
+                  >
+                    <MultiUpload />
+                  </Form.Item>
+                </Col>
+              </Row>
+            </div>
+          ))}
+        </>
+      )}
+    </Form.List>
+  )
 
   useEffect(() => {
     if(id) {
-      refresh()
+      state.refresh()
     } else {
       navigate('../')
     }
@@ -48,46 +250,46 @@ function EventsDetail() {
 
   return (
     <>
-      <MyBreadcrumb list={['Events', data?.basic?.name || '']} />
+      <MyBreadcrumb list={['Events', state.data?.basic?.name || '']} />
       <LoadingLayout
         ref={layout}
         className={classNames(css.eventDetail, 'tableLayout')}
       >
         <div>
-          {data?.basic?.status === 'WAIT' && <div className={classNames(css.tag, css.unsubmitted)}>
+          {state.data?.basic?.status === 'WAIT' && <div className={classNames(css.tag, css.unsubmitted)}>
             Unsubmitted
           </div>}
 
-          {data?.basic?.status === 'REVIEW' && <div className={classNames(css.tag, css.auditing)}>
+          {state.data?.basic?.status === 'REVIEW' && <div className={classNames(css.tag, css.auditing)}>
             Auditing
           </div>}
 
-          {data?.basic?.status === 'REFUSE' && <div className={classNames(css.tag, css.declined)}>
+          {state.data?.basic?.status === 'REFUSE' && <div className={classNames(css.tag, css.declined)}>
             Declined
           </div>}
 
-          {data?.basic?.status === 'PASSED' && data?.basic?.state === 'POST' && <div className={classNames(css.tag, css.posting)}>
+          {state.data?.basic?.status === 'PASSED' && state.data?.basic?.state === 'POST' && <div className={classNames(css.tag, css.posting)}>
             Posting
           </div>}
 
-          {data?.basic?.status === 'PASSED' && data?.basic?.state === 'WAIT' && <div className={classNames(css.tag, css.waiting)}>
+          {state.data?.basic?.status === 'PASSED' && state.data?.basic?.state === 'WAIT' && <div className={classNames(css.tag, css.waiting)}>
             Waiting for starting
           </div>}
 
-          {data?.basic?.status === 'PASSED' && data?.basic?.state === 'CHECK' && <div className={classNames(css.tag, css.checking)}>
+          {state.data?.basic?.status === 'PASSED' && state.data?.basic?.state === 'CHECK' && <div className={classNames(css.tag, css.checking)}>
             Checking in
           </div>}
 
-          {data?.basic?.status === 'PASSED' && data?.basic?.state === 'PROGRESS' && <div className={classNames(css.tag, css.progress)}>
+          {state.data?.basic?.status === 'PASSED' && state.data?.basic?.state === 'PROGRESS' && <div className={classNames(css.tag, css.progress)}>
             In progress
           </div>}
 
           <div className={css.wrapper}>
             <div className={css.basicInfo}>
               <div className={css.infoWrapper}>
-                <h3>{data?.basic?.name}</h3>
+                <h3>{state.data?.basic?.name}</h3>
                 <div className={css.description}>
-                  {data?.basic?.description}
+                  {state.data?.basic?.description}
                 </div>
                 <ul className={css.infoList}>
                   <li>
@@ -95,7 +297,7 @@ function EventsDetail() {
                       ADD:
                     </span>
                     <span className={css.cont}>
-                      {data?.basic?.location}
+                      {state.data?.basic?.location}
                     </span>
                   </li>
 
@@ -104,7 +306,7 @@ function EventsDetail() {
                       TIME:
                     </span>
                     <span className={css.cont}>
-                      {data?.basic?.begin_time}
+                      {state.data?.basic?.begin_time}
                     </span>
                   </li>
 
@@ -113,7 +315,7 @@ function EventsDetail() {
                       PERMISSION:
                     </span>
                     <span className={css.cont}>
-                      {data?.basic?.is_private ? 'Required' : 'None'}
+                      {state.data?.basic?.is_private ? 'Required' : 'None'}
                     </span>
                   </li>
 
@@ -122,7 +324,7 @@ function EventsDetail() {
                       TICKET NUMBER:
                     </span>
                     <span className={css.cont}>
-                      {data?.basic?.stock}
+                      {state.data?.basic?.stock}
                     </span>
                   </li>
 
@@ -131,13 +333,13 @@ function EventsDetail() {
                       TICKET PRICE:
                     </span>
                     <span className={css.cont}>
-                      ${data?.basic?.price}
+                      ${state.data?.basic?.price}
                     </span>
                   </li>
                 </ul>
               </div>
               <Carousel className={css.swiper} autoplay={true}>
-                {data?.basic?.images?.map((v, i) => (
+                {state.data?.basic?.images?.map((v, i) => (
                   <img key={i} src={v} />
                 ))}
               </Carousel>
@@ -147,14 +349,14 @@ function EventsDetail() {
               ghost
               className={css.collapseWrapper}
             >
-              {isShowSpecialty && (
+              {state.isShowSpecialty && (
                 <Collapse.Panel
                   header="Specialties"
                   key="specialties"
                   className={css.specialties}
                 >
                   <ul>
-                    {data?.basic?.specialty?.map((v, i) => (
+                    {state.data?.basic?.specialty?.map((v, i) => (
                       <li key={i}>
                         <i className="iconfont icon-specialty" />
                         <div className={css.info}>
@@ -168,14 +370,14 @@ function EventsDetail() {
                 </Collapse.Panel>
               )}
 
-              {isShowTimeline && (
+              {state.isShowTimeline && (
                 <Collapse.Panel
                   header="Timeline"
                   key="timeline"
                   className={css.timeline}
                 >
                   <ul>
-                    {data?.basic?.timeline?.map((v, i) => (
+                    {state.data?.basic?.timeline?.map((v, i) => (
                       <li key={i}>
                         <div className={css.name}>
                           {v.title}
@@ -192,14 +394,14 @@ function EventsDetail() {
                 </Collapse.Panel>
               )}
 
-              {isShowLotteries && (
+              {state.isShowLotteries && (
                 <Collapse.Panel
-                  header="Lottery"
+                  header="Raffle"
                   key="lottery"
                   className={css.lottery}
                 >
                   <ul>
-                    {data?.lotteries?.map((v, i) => (
+                    {state.data?.lotteries?.map((v, i) => (
                       <li key={i}>
                         <img src={v.images?.[0]} />
                         <div className={css.info}>
@@ -223,14 +425,14 @@ function EventsDetail() {
                 </Collapse.Panel>
               )}
 
-              {isShowSales && (
+              {state.isShowSales && (
                 <Collapse.Panel
                   header="Charity sale"
                   key="sale"
                   className={css.sale}
                 >
                   <ul>
-                    {data?.sales?.map((v, i) => (
+                    {state.data?.sales?.map((v, i) => (
                       <li key={i}>
                         <img src={v.images?.[0]} />
                         <div className={css.info}>
@@ -240,7 +442,7 @@ function EventsDetail() {
                           <div className={css.nums}>
                             <span>Number: {v.stock}</span>
                             <span>Price: ${v.price}</span>
-                            <span>Sponsor: {v.sponsor?.name}</span>
+                            {/* <span>Sponsor: {v.sponsor?.name}</span> */}
                           </div>
                           <div className={css.desc}>
                             {v.description}
@@ -252,14 +454,14 @@ function EventsDetail() {
                 </Collapse.Panel>
               )}
 
-              {isShowStaff && (
+              {state.isShowStaff && (
                 <Collapse.Panel
                   header="Staff"
                   key="staff"
                   className={css.staff}
                 >
                   <ul>
-                    {data?.staffs?.map((v, i) => (
+                    {state.data?.staffs?.map((v, i) => (
                       <li key={i}>
                         <img src={v.avatar} />
                         <div className={css.info}>
@@ -283,11 +485,11 @@ function EventsDetail() {
               <Steps.Step
                 title="Basic information"
               />
-              {isShowSpecialty && <Steps.Step title="Specialties" />}
-              {isShowTimeline && <Steps.Step title="Timeline" />}
-              {isShowLotteries && <Steps.Step title="Lottery" />}
-              {isShowSales && <Steps.Step title="Charity sale" />}
-              {isShowStaff && <Steps.Step title="Staff" />}
+              {state.isShowSpecialty && <Steps.Step title="Specialties" />}
+              {state.isShowTimeline && <Steps.Step title="Timeline" />}
+              {state.isShowLotteries && <Steps.Step title="Raffle" />}
+              {state.isShowSales && <Steps.Step title="Charity sale" />}
+              {state.isShowStaff && <Steps.Step title="Staff" />}
             </Steps>
           </div>
         </div>
@@ -297,26 +499,94 @@ function EventsDetail() {
         <Button
           type="primary"
           icon={<AuditOutlined />}
-          onClick={() => {
-            navigate(`/events/edit/${id}`)
-          }}
+          onClick={state.onEdit}
         >
           Edit
         </Button>
-
-        <MyButton
-          danger
-          icon={<DeleteOutlined />}
-          onLoadingClick={async () => {
-            await EventsService.removeById(id)
-            navigate('/events')
-          }}
-        >
-          Delete
-        </MyButton>
       </div>
+
+      <Modal
+        width={1200}
+        className={css.editWrapper}
+        visible={state.visible}
+        onCancel={() => {
+          state.setVisible(false)
+        }}
+        footer={
+          <div>
+            {state.step === 1 && (
+              <Button onClick={() => {
+                state.setStep(state.step - 1)
+              }}>
+                Prev
+              </Button>
+            )}
+
+            {state.step === 0 && (
+              <Button  onClick={async () => {
+                try {
+                  await form.validateFields()
+                  state.setStep(state.step + 1)
+                } catch(err) {
+                  if(err instanceof Error) {
+                    message.error(err.message)
+                  }
+                }
+              }}>
+                Next
+              </Button>
+            )}
+
+            {state.step === 1 && (
+              <Button loading={state.submitting} onClick={state.submit}>
+                Finish
+              </Button>
+            )}
+          </div>
+        }
+      >
+        <Form
+          form={form}
+          labelCol={{ span: 24 }}
+          wrapperCol={{ span: 24 }}
+          className={classNames(css.form, editFormCss.form)}
+        >
+          <div className={css.editHeader}>
+            <Steps current={state.step}>
+              <Steps.Step title={`Step 1`} description="Raffle prizes" />
+              <Steps.Step title={`Step 2`} description="Sales" />
+            </Steps>
+          </div>
+          {state.step === 0 && (
+            <>
+              <div className={css.topTitle}>
+                Raffle prizes
+              </div>
+
+              <div className={css.formBody}>
+                {renderSales({
+                  name: 'prizes'
+                })}
+              </div>
+            </>
+          )}
+          {state.step === 1 && (
+            <>
+              <div className={css.topTitle}>
+                Sales
+              </div>
+
+              <div className={css.formBody}>
+                {renderSales({
+                  name: 'sales'
+                })}
+              </div>
+            </>
+          )}
+        </Form>
+      </Modal>
     </>
   )
 }
 
-export default EventsDetail
+export default observer(EventsDetail)
