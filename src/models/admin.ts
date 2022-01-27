@@ -1,5 +1,5 @@
 import { String } from "aws-sdk/clients/acm";
-import { IEventsModel, INewsModel } from ".";
+import { IEventsModel } from ".";
 
 export interface ILoginParams {
   // 用户名或邮箱
@@ -94,24 +94,20 @@ export interface IStaffModel {
 export interface IDashboardModel {
   // 活动
   events: IEventsModel[]
-  // 工作人员
-  staffs: {
-    id: number
-    nickname: string
-    profile: string
-    avatar: string
-  }[]
-  // 关注用户
-  followers: {
-    id: number
-    avatar: string
-    name: string
-    profile: string
-  }[]
   // 捐赠记录
   received: number[]
   // 捐款来源
   sources: IDashboardSourceModel[]
+  products: {
+    id: number
+    image: string
+    name: string
+    description: string
+    // 销量
+    sold: number
+    // 收入
+    income: number
+  }[]
 }
 
 export interface IAdminManagerCreateParams {

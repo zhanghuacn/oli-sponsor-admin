@@ -1,6 +1,5 @@
 export * from './admin'
 export * from './events'
-export * from './news'
 
 export interface IPageParams {
   // 页码, 默认1
