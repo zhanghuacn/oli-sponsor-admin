@@ -42,11 +42,11 @@ export function AdminLayout({
   const navigate = useNavigate()
   const location = useLocation()
   const siderNavList = useMemo(() => {
-    // if(store.user?.info && !contains(store.user.info.roles || [], 'SUPER-ADMIN')) {
-      // return _siderNavList.filter((v) => v.path !== '/admin')
-    // } else {
+    if(store.user?.info && !contains(store.user.info.roles || [], 'SUPER-ADMIN')) {
+      return _siderNavList.filter((v) => v.path !== '/admin')
+    } else {
       return _siderNavList
-    // }
+    }
   }, [])
   // const serializeBreadcrumbMap = (
   //   list: ISiderNavOption[],

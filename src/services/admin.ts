@@ -52,7 +52,7 @@ class AdminService {
    * @returns
    */
   async addStaff(p: IAdminManagerCreateParams) {
-    return await HttpRequest.post('/api/v1/manager', p)
+    return await HttpRequest.post('/api/v1/staffs', p)
   }
 
   /**
@@ -61,7 +61,7 @@ class AdminService {
    * @returns
    */
   async removeStaffById(id: number) {
-    return await HttpRequest.delete(`/api/v1/manager/${id}`)
+    return await HttpRequest.delete(`/api/v1/staffs/${id}`)
   }
 
   /**
@@ -70,7 +70,7 @@ class AdminService {
    * @returns
    */
   async getStaffPage(p: IPageParams): Promise<IPageModel<IStaffModel>> {
-    return await HttpRequest.get('/api/v1/manager', p)
+    return await HttpRequest.get('/api/v1/staffs', p)
   }
 }
 

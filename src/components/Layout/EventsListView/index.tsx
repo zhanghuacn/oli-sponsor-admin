@@ -1,6 +1,6 @@
 import css from './index.module.less'
 import { Observer } from 'mobx-react-lite'
-import { Pagination, Spin } from "antd"
+import { Empty, Pagination, Spin } from "antd"
 import classNames from 'classnames'
 import { PageStore } from '../../../stores/page'
 import { IEventsModel } from '../../../models'
@@ -56,24 +56,35 @@ export function EventsListView({
         <>
           <div className={css.eventsList}>
             <Spin spinning={page.loading}>
-              <ul className="cardListView">
-                {page.list?.map?.((v) => (
-                  <li key={v.id} onClick={() => {
-                    navigate(`/events/detail/${v.id}`)
-                  }}>
-                    <img src={v.image} />
-                    <div className="info">
-                      <div className="tit">
-                        {v.name}
-                      </div>
-                      <div className="location">
-                        <span>{v.location}</span>
-                        <span>{v.begin_time}</span>
-                      </div>
-                    </div>
-                  </li>
-                ))}
-              </ul>
+              {
+                (page.errMsg || page?.list?.length === 0)
+                ? (
+                  <Empty
+                    className={css.empty}
+                    description={page.errMsg || 'no data'}
+                  />
+                )
+                : (
+                  <ul className="cardListView">
+                    {page.list?.map?.((v) => (
+                      <li key={v.id} onClick={() => {
+                        navigate(`/events/detail/${v.id}`)
+                      }}>
+                        <img src={v.image} />
+                        <div className="info">
+                          <div className="tit">
+                            {v.name}
+                          </div>
+                          <div className="location">
+                            <span>{v.location}</span>
+                            <span>{v.begin_time}</span>
+                          </div>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                )
+              }
             </Spin>
           </div>
           <Pagination

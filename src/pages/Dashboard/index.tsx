@@ -52,7 +52,7 @@ function Dashboard() {
         <div className={classNames(css.products, css.events)}>
           <div className={css.boxTitle}>
             Products
-            <span className={css.num}>{data?.products?.length}</span>
+            <span className={css.num}>{data?.products?.length || 0}</span>
           </div>
           <ul className={css.body}>
             {data?.products?.map((v) => (
@@ -84,7 +84,7 @@ function Dashboard() {
         <div className={css.events}>
           <div className={css.boxTitle}>
             Events
-            <span className={css.num}>{data?.events?.length}</span>
+            <span className={css.num}>{data?.events?.length || 0}</span>
           </div>
           <ul className={css.body}>
             {data?.events?.map((v) => (
