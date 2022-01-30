@@ -17,7 +17,7 @@ interface IBackdropFormItemProps {
   onChange?: (v: string) => void
 }
 
-function BackdropFormItem({
+export function BackdropFormItem({
   value,
   onChange
 }: IBackdropFormItemProps) {
@@ -85,7 +85,7 @@ function BackdropFormItem({
   )
 }
 
-function AvatarFormItem({
+export function AvatarFormItem({
   value,
   onChange
 }: IBackdropFormItemProps) {
