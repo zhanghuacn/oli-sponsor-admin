@@ -109,3 +109,13 @@ export interface IDashboardModel {
 export interface IAdminManagerCreateParams {
   username: string
 }
+
+export interface ISponsorDetailModel {
+  id: number
+  name: string
+  logo: string
+  backdrop: string
+  website: string
+  description: string
+  introduce: string
+}

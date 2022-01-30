@@ -20,6 +20,7 @@ const Events = defaultFallbackLoadable(() => import('../pages/Events'))
 const EventsDetail = defaultFallbackLoadable(() => import('./Events/Detail'))
 const Register = defaultFallbackLoadable(() => import('../pages/Register'))
 const Search = defaultFallbackLoadable(() => import('../pages/Search'))
+const MineEditProfiles = defaultFallbackLoadable(() => import('../pages/Mine/EditProfiles'))
 
 function Routes() {
   const location = useLocation()
@@ -31,6 +32,7 @@ function Routes() {
     { path: '/events/detail/:id', element: <EventsDetail /> },
     { path: '/register', element: <Register /> },
     { path: '/search', element: <Search /> },
+    { path: '/mine/edit-profiles', element: <MineEditProfiles /> },
   ])
 
   if(contains(['/login', '/register'], location.pathname)) {

@@ -1,4 +1,4 @@
-import { IAdminManagerCreateParams, IAuthUserModel, IDashboardModel, IGlobalSearchModel, ILoginParams, IPageModel, IPageParams, IRegisterParams, IStaffModel } from "../models"
+import { IAdminManagerCreateParams, IAuthUserModel, IDashboardModel, IGlobalSearchModel, ILoginParams, IPageModel, IPageParams, IRegisterParams, ISponsorDetailModel, IStaffModel } from "../models"
 import { HttpRequest } from "../utils"
 
 class AdminService {
@@ -71,6 +71,23 @@ class AdminService {
    */
   async getStaffPage(p: IPageParams): Promise<IPageModel<IStaffModel>> {
     return await HttpRequest.get('/api/v1/staffs', p)
+  }
+
+  /**
+   * 获取赞助商详情
+   * @returns
+   */
+  async getSponsorDetail(): Promise<ISponsorDetailModel> {
+    return await HttpRequest.get('/api/v1/sponsor')
+  }
+
+  /**
+   * 更新赞助商详情
+   * @param p
+   * @returns
+   */
+  async updateSponsor(p: any): Promise<void> {
+    return await HttpRequest.put('/api/v1/sponsor', p)
   }
 }
 

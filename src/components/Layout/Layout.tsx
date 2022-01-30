@@ -122,6 +122,13 @@ export function AdminLayout({
                 </Menu.Item> */}
                 <Menu.Item
                   onClick={() => {
+                    navigate('/mine/edit-profiles')
+                  }}
+                >
+                  Edit profiles
+                </Menu.Item>
+                <Menu.Item
+                  onClick={() => {
                     store.user.logout()
                     navigate('/login')
                   }}
