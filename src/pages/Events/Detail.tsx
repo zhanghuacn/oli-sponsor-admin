@@ -236,11 +236,12 @@ function EventsDetail() {
                         </span>
                       </>
                     )}
+                    extra="The width height ratio of the picture must be 375x350"
                     rules={[
                       { required: true, message: 'Please enter cover pictures' }
                     ]}
                   >
-                    <MultiUpload />
+                    <MultiUpload widthRatio={375} heightRatio={350} />
                   </Form.Item>
                 </Col>
               </Row>

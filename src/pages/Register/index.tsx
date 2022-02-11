@@ -60,7 +60,10 @@ export function BackdropFormItem({
           if(files && files.length > 0) {
             setProgress(0)
             const image = files[0]
-            AwsUploader.upload(image)
+            AwsUploader.upload(image, {
+              width: 350,
+              height: 150
+            })
               .then((res) => {
                 onChange?.(res)
               })
