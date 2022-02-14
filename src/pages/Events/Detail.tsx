@@ -13,6 +13,7 @@ import { useForm } from 'antd/lib/form/Form'
 import { MultiUpload, RichEditor } from '../../components/FormWapper'
 import { NamePath } from 'antd/lib/form/interface'
 import { observer, useLocalObservable } from 'mobx-react-lite'
+import { isArray } from 'underscore'
 
 interface ISalesRenderProps {
   name: NamePath
@@ -113,6 +114,16 @@ function EventsDetail() {
         state.submitting = true
         await form.validateFields()
         const data = form.getFieldsValue(true)
+        for(const k in data) {
+          const arr = data[k]
+          if(isArray(arr)) {
+            for(const item of arr) {
+              if(!item.content) {
+                delete item.content
+              }
+            }
+          }
+        }
         await EventsService.updateById(id, data)
         state.visible = false
         form.resetFields()
@@ -225,11 +236,12 @@ function EventsDetail() {
                         </span>
                       </>
                     )}
+                    extra="The width height ratio of the picture must be 375x350"
                     rules={[
                       { required: true, message: 'Please enter cover pictures' }
                     ]}
                   >
-                    <MultiUpload />
+                    <MultiUpload widthRatio={375} heightRatio={350} />
                   </Form.Item>
                 </Col>
               </Row>

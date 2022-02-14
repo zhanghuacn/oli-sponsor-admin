@@ -124,13 +124,17 @@ interface IMultiUploadProps {
   onChange?: (v: string[]) => void
   className?: string
   size?: number
+  widthRatio?: number
+  heightRatio?: number
 }
 
 export function MultiUpload({
   value,
   onChange,
   size = 5,
-  className
+  className,
+  widthRatio,
+  heightRatio
 }: IMultiUploadProps) {
   const [ preview, setPreview ] = useState<string | undefined>()
   const [ progress, setProgress ] = useState<number>(-1)
@@ -170,7 +174,10 @@ export function MultiUpload({
         customRequest={async ({ file, onSuccess, onError }) => {
           try {
             setProgress(0)
-            const url = await AwsUploader.upload(file as RcFile)
+            const url = await AwsUploader.upload(file as RcFile, {
+              width: widthRatio,
+              height: heightRatio
+            })
             onSuccess?.(url)
             const v = [...(value || []), url].slice(0, size)
             console.log(v)

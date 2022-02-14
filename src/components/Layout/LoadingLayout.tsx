@@ -34,4 +34,19 @@ const _LoadingLayout = function ({
   )
 }
 
+export function onLoadingLayoutAsyncWrapper(fn: (...rest: any[]) => Promise<void>, layout: React.MutableRefObject<ILoadingLayoutRef | undefined>) {
+  return async (...rest: any[]) => {
+    try {
+      layout.current?.setLoading(true)
+      await fn(...rest)
+    } catch(err) {
+      if(err instanceof Error) {
+        layout.current?.setError(err)
+      }
+    } finally {
+      layout.current?.setLoading(false)
+    }
+  }
+}
+
 export const LoadingLayout = forwardRef(_LoadingLayout)

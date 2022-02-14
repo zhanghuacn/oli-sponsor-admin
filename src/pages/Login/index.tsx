@@ -15,11 +15,11 @@ function Login() {
       <div className={css.infoWrapper}>
         <div className={css.logo}>
           <img src="" />
-          Logo here
+          Oli charity sponsor admin
         </div>
-        <div className={css.desc}>
+        {/* <div className={css.desc}>
           descriptions descriptions descriptions descriptions
-        </div>
+        </div> */}
       </div>
 
       <div className={css.body}>

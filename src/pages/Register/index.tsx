@@ -17,7 +17,7 @@ interface IBackdropFormItemProps {
   onChange?: (v: string) => void
 }
 
-function BackdropFormItem({
+export function BackdropFormItem({
   value,
   onChange
 }: IBackdropFormItemProps) {
@@ -60,7 +60,10 @@ function BackdropFormItem({
           if(files && files.length > 0) {
             setProgress(0)
             const image = files[0]
-            AwsUploader.upload(image)
+            AwsUploader.upload(image, {
+              width: 350,
+              height: 150
+            })
               .then((res) => {
                 onChange?.(res)
               })
@@ -85,7 +88,7 @@ function BackdropFormItem({
   )
 }
 
-function AvatarFormItem({
+export function AvatarFormItem({
   value,
   onChange
 }: IBackdropFormItemProps) {
