@@ -22,20 +22,20 @@ function getPublicEnvVariables() {
 
 
 module.exports = {
-  devServer: {
-    proxy: {
-      '/api': {
-        // target: 'http://yapi.valsn.com/mock/45/sponsor',
-        target: 'https://dev-api.olicharity.org/sponsor',
-        // target: 'https://85de-183-14-215-216.ngrok.io/sponsor',
-        changeOrigin: true,
-        pathRewrite: {
-          "^/api": '/'
-        },
+  // devServer: {
+  //   proxy: {
+  //     '/api': {
+  //       // target: 'http://yapi.valsn.com/mock/45/sponsor',
+  //       target: 'https://dev-api.olicharity.org/sponsor',
+  //       // target: 'https://85de-183-14-215-216.ngrok.io/sponsor',
+  //       changeOrigin: true,
+  //       pathRewrite: {
+  //         "^/api": '/'
+  //       },
 
-      }
-    },
-  },
+  //     }
+  //   },
+  // },
   plugins: [
     {
       plugin: {
