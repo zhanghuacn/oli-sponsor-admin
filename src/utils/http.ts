@@ -68,12 +68,12 @@ class HttpRequest {
   private async request(option: IHttpRequestOption) {
     const fetchOption: any = {
       method: option.method,
-      credentials: 'include',
+      // credentials: 'include',
       headers: {
         ...(option.headers || {})
       }
     };
-    let url = option.path;
+    let url = CHARITY_PUBLIC_API_HOST + option.path.replace(/^\/api/, '');
 
     // token 导入
     const token = tokenStorage.get()
