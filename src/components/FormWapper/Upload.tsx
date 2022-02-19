@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { PlusOutlined, InboxOutlined } from '@ant-design/icons'
 import { uuid } from "../../utils";
 import { AwsUploader } from "../../utils/upload";
+import ImgCrop from 'antd-img-crop';
 
 export interface IMyUploadProps {
   value?: string
@@ -165,64 +166,76 @@ export function MultiUpload({
     }
   }, [progress])
 
+  const uploadComponent = (
+    <Upload
+      disabled={progress >= 0}
+      listType="picture-card"
+      fileList={fileList}
+      customRequest={async ({ file, onSuccess, onError }) => {
+        try {
+          setProgress(0)
+          const url = await AwsUploader.upload(file as RcFile)
+          onSuccess?.(url)
+          const v = [...(value || []), url].slice(0, size)
+          console.log(v)
+          onChange?.(v)
+        } catch(err: any) {
+          if(err instanceof Error) {
+            message.error(err.message)
+          }
+
+          onError?.(err)
+        } finally {
+          setProgress(-1)
+        }
+      }}
+      onPreview={async (file) => {
+        if (!file.url && !file.preview && file.originFileObj) {
+          file.preview = await getBase64(file.originFileObj) as string
+        }
+
+        setPreview(file.url || file.preview)
+      }}
+      // onChange={({ fileList }) => {
+      //   if(fileList && fileList.length > size) {
+      //     onChange?.(fileList[0].url as string)
+      //   } else {
+      //     onChange?.(undefined)
+      //   }
+      // }}
+      onRemove={(file) => {
+        if(value) {
+          onChange?.(value.filter((v) => v !== file.url as string))
+        }
+      }}
+    >
+      {fileList.length < size && (
+        progress > 0
+        ? <div>{progress.toFixed(2)}%</div>
+        : (
+          <div>
+            <PlusOutlined />
+            <div style={{ marginTop: 8 }}>Upload</div>
+          </div>
+        )
+      )}
+    </Upload>
+  )
+
   return (
     <>
-      <Upload
-        disabled={progress >= 0}
-        listType="picture-card"
-        fileList={fileList}
-        customRequest={async ({ file, onSuccess, onError }) => {
-          try {
-            setProgress(0)
-            const url = await AwsUploader.upload(file as RcFile, {
-              width: widthRatio,
-              height: heightRatio
-            })
-            onSuccess?.(url)
-            const v = [...(value || []), url].slice(0, size)
-            console.log(v)
-            onChange?.(v)
-          } catch(err: any) {
-            if(err instanceof Error) {
-              message.error(err.message)
-            }
-
-            onError?.(err)
-          } finally {
-            setProgress(-1)
-          }
-        }}
-        onPreview={async (file) => {
-          if (!file.url && !file.preview && file.originFileObj) {
-            file.preview = await getBase64(file.originFileObj) as string
-          }
-
-          setPreview(file.url || file.preview)
-        }}
-        // onChange={({ fileList }) => {
-        //   if(fileList && fileList.length > size) {
-        //     onChange?.(fileList[0].url as string)
-        //   } else {
-        //     onChange?.(undefined)
-        //   }
-        // }}
-        onRemove={(file) => {
-          if(value) {
-            onChange?.(value.filter((v) => v !== file.url as string))
-          }
-        }}
-      >
-        {fileList.length < size && (
-          progress > 0
-          ? <div>{progress.toFixed(2)}%</div>
-          : (
-            <div>
-              <PlusOutlined />
-              <div style={{ marginTop: 8 }}>Upload</div>
-            </div>
-          )
-        )}
-      </Upload>
+      {
+        widthRatio && heightRatio
+        ? (
+          <ImgCrop
+            rotate
+            aspect={widthRatio / heightRatio}
+          >
+            {uploadComponent}
+          </ImgCrop>
+        )
+        : uploadComponent
+      }
 
       <Modal
         visible={!!preview}
