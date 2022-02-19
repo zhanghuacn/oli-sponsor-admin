@@ -5,12 +5,11 @@ import { MultiUploadDragger, RichEditor } from '../../components/FormWapper';
 import { AwsUploader } from '../../utils/upload';
 import css from './index.module.less'
 import formCss from '../../components/FormModal/index.module.less'
-import { FileImageOutlined } from '@ant-design/icons'
 import { useForm } from 'antd/lib/form/Form';
-import { AdminService } from '../../services';
 import { useLocation, useNavigate } from 'react-router-dom';
 import queryString from 'query-string'
 import { useStore } from '../../components/Hooks/StoreProvider';
+import ImgCrop from 'antd-img-crop';
 
 interface IBackdropFormItemProps {
   value?: string
@@ -38,9 +37,8 @@ export function BackdropFormItem({
       }, 500)
     }
   }, [progress])
-
-  return (
-    <div
+  const UploadComponent = ({ beforeUpload }: any) => {
+    return <div
       className={css.backdropFormItem}
       style={{
         backgroundImage: `url(${value || require('../../assets/images/bg-charity.png')})`
@@ -60,14 +58,12 @@ export function BackdropFormItem({
           if(files && files.length > 0) {
             setProgress(0)
             const image = files[0]
-            AwsUploader.upload(image, {
-              width: 350,
-              height: 150
-            })
-              .then((res) => {
+            beforeUpload(image)
+              .then((res: any) => AwsUploader.upload(res))
+              .then((res: any) => {
                 onChange?.(res)
               })
-              .catch((err) => {})
+              .catch((err: any) => {})
               .finally(() => {
                 setProgress(-1)
               })
@@ -85,6 +81,16 @@ export function BackdropFormItem({
         </>}
       </div>
     </div>
+  }
+
+
+  return (
+    <ImgCrop
+      rotate
+      aspect={350 / 150}
+    >
+      <UploadComponent />
+    </ImgCrop>
   )
 }
 
@@ -110,8 +116,8 @@ export function AvatarFormItem({
     }
   }, [progress])
 
-  return (
-    <div
+  const UploadComponent = ({ beforeUpload }: any) => {
+    return <div
       className={css.avatarFormItem}
       style={{
         backgroundImage: `url(${value || require('../../assets/images/logo-charity.png')})`
@@ -131,11 +137,12 @@ export function AvatarFormItem({
           if(files && files.length > 0) {
             setProgress(0)
             const image = files[0]
-            AwsUploader.upload(image)
-              .then((res) => {
+            beforeUpload(image)
+              .then((res: any) => AwsUploader.upload(res))
+              .then((res: any) => {
                 onChange?.(res)
               })
-              .catch((err) => {})
+              .catch((err: any) => {})
               .finally(() => {
                 setProgress(-1)
               })
@@ -151,6 +158,15 @@ export function AvatarFormItem({
           : <i className="iconfont icon-picture" />}
       </div>
     </div>
+  }
+
+  return (
+    <ImgCrop
+      rotate
+      aspect={1}
+    >
+      <UploadComponent />
+    </ImgCrop>
   )
 }
 

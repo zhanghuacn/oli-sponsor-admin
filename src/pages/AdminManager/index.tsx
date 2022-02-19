@@ -99,7 +99,7 @@ function AdminManager() {
       >
         <Form.Item
           name="username"
-          label="username"
+          label="name"
           rules={[{ required: true }]}
         >
           <Input />
