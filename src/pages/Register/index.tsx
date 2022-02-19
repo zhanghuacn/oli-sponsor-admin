@@ -355,19 +355,15 @@ function Register() {
         <Steps progressDot current={step} direction="vertical">
           <Steps.Step
             title="Background and logo"
-            description="This is a description."
           />
           <Steps.Step
             title="Basic information"
-            description="This is a description."
           />
           <Steps.Step
             title="Contact information"
-            description="This is a description."
           />
           <Steps.Step
             title="Others"
-            description="This is a description."
           />
         </Steps>
       </div>
