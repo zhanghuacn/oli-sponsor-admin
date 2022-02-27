@@ -177,7 +177,6 @@ export function MultiUpload({
           const url = await AwsUploader.upload(file as RcFile)
           onSuccess?.(url)
           const v = [...(value || []), url].slice(0, size)
-          console.log(v)
           onChange?.(v)
         } catch(err: any) {
           if(err instanceof Error) {

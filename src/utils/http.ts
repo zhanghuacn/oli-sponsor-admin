@@ -93,7 +93,6 @@ class HttpRequest {
       const res = await fetch(url, fetchOption);
       const data: IHttpResponse = await res.json();
       if (data.code !== 200) {
-        console.log(data)
         if(data.code === 401) {
           loginStatusObserver.emit({
             msg: data.message,

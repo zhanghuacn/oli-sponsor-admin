@@ -45,7 +45,7 @@ function EditProfiles() {
 
   return (
     <>
-      <MyBreadcrumb list={['Mine', 'Edit profiles']} />
+      <MyBreadcrumb list={['Settings']} />
       <LoadingLayout
         ref={layout}
         className={classNames(css.registerWrapper, css.editProfilesWrapper)}
@@ -97,7 +97,7 @@ function EditProfiles() {
             </Form.Item>
 
             <Form.Item
-              label="Introduce"
+              label="Introduction"
               name="introduce"
             >
               <RichEditor />

@@ -252,7 +252,7 @@ function Register() {
           </Form.Item>
 
           <Form.Item
-            label="Introduce"
+            label="Introduction"
             name="introduce"
             rules={[{ required: true }]}
           >
@@ -266,7 +266,7 @@ function Register() {
           </div>
 
           <Form.Item
-            label="Contact"
+            label="Name"
             name="contact"
             rules={[{ required: true }]}
           >
@@ -352,7 +352,7 @@ function Register() {
                   ...data,
                   token: queryMap.token
                 })
-                navigate('/')
+                navigate('/login')
               } catch(err) {
                 if(err instanceof Error) {
                   message.error(err.message)
