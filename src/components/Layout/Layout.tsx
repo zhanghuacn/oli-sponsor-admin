@@ -29,7 +29,7 @@ const _siderNavList: ISiderNavOption[] = [
     path: '/admin',
     icon: <UserOutlined />,
   }, {
-    title: 'Setting',
+    title: 'Settings',
     path: '/setting',
     icon: <SettingOutlined />,
   }

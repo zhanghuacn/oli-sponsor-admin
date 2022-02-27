@@ -45,7 +45,7 @@ function EditProfiles() {
 
   return (
     <>
-      <MyBreadcrumb list={['Mine', 'Edit profiles']} />
+      <MyBreadcrumb list={['Settings']} />
       <LoadingLayout
         ref={layout}
         className={classNames(css.registerWrapper, css.editProfilesWrapper)}
