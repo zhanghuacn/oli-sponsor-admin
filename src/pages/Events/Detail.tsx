@@ -218,7 +218,7 @@ function EventsDetail() {
                   <Form.Item
                     {...field}
                     name={[field.name, "content"]}
-                    label="Content"
+                    label="Details"
                   >
                     <RichEditor />
                   </Form.Item>
@@ -232,7 +232,7 @@ function EventsDetail() {
                       <>
                         Cover pictures
                         <span className={css.privateDesc}>
-                          You can upload 1~5pictures to describe your event
+                          You can upload 1~5 pictures
                         </span>
                       </>
                     )}

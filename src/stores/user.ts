@@ -39,9 +39,9 @@ export default class UserStore {
 
   async register(p: IRegisterParams) {
     const info = await AdminService.register(p)
-    this._info = info.user
-    userStorage.set(this._info)
-    tokenStorage.set(`${info.token_type} ${info.token}`)
+    // this._info = info.user
+    // userStorage.set(this._info)
+    // tokenStorage.set(`${info.token_type} ${info.token}`)
   }
 
   logout() {

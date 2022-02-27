@@ -97,7 +97,7 @@ function EditProfiles() {
             </Form.Item>
 
             <Form.Item
-              label="Introduce"
+              label="Introduction"
               name="introduce"
             >
               <RichEditor />
