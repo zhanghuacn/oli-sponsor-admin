@@ -319,7 +319,7 @@ export function MultiUploadDragger({
       <p className="ant-upload-drag-icon">
         <InboxOutlined />
       </p>
-      <p className="ant-upload-text">Click or drag your business plan to this area to upload</p>
+      <p className="ant-upload-text">Click or drag Attachments to this area to upload</p>
       <p className="ant-upload-hint">
         Support for a single or bulk upload.
       </p>
