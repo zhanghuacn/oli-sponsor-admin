@@ -330,13 +330,13 @@ function Register() {
             <MultiUploadDragger />
           </Form.Item>
 
-          <Form.Item
+          {/* <Form.Item
             label="Documents"
             name="documents"
             rules={[{ required: true }]}
           >
             <MultiUploadDragger />
-          </Form.Item>
+          </Form.Item> */}
         </div>
 
         <div className={css.footerBtn}>
