@@ -32,7 +32,7 @@ function Routes() {
     { path: '/events/detail/:id', element: <EventsDetail /> },
     { path: '/register', element: <Register /> },
     { path: '/search', element: <Search /> },
-    { path: '/mine/edit-profiles', element: <MineEditProfiles /> },
+    { path: '/setting', element: <MineEditProfiles /> },
   ])
 
   if(contains(['/login', '/register'], location.pathname)) {

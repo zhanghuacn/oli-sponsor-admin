@@ -3,7 +3,7 @@ import { useEffect, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useStore } from '../Hooks/StoreProvider';
 import css from './index.module.less'
-import { HomeOutlined, UserOutlined, FileTextOutlined, AppstoreOutlined, SmileOutlined, ToolOutlined, SearchOutlined } from '@ant-design/icons'
+import { HomeOutlined, UserOutlined, SettingOutlined, SearchOutlined } from '@ant-design/icons'
 import { loginStatusObserver } from '../../utils';
 import classNames from 'classnames';
 import { contains } from 'underscore';
@@ -28,6 +28,10 @@ const _siderNavList: ISiderNavOption[] = [
     title: 'Manager',
     path: '/admin',
     icon: <UserOutlined />,
+  }, {
+    title: 'Settings',
+    path: '/setting',
+    icon: <SettingOutlined />,
   }
 ];
 
@@ -120,13 +124,13 @@ export function AdminLayout({
                 >
                   修改密码
                 </Menu.Item> */}
-                <Menu.Item
+                {/* <Menu.Item
                   onClick={() => {
-                    navigate('/mine/edit-profiles')
+                    navigate('/setting')
                   }}
                 >
                   Edit profiles
-                </Menu.Item>
+                </Menu.Item> */}
                 <Menu.Item
                   onClick={() => {
                     store.user.logout()

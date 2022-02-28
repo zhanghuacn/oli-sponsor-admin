@@ -18,12 +18,12 @@ function AdminManager() {
   // const [ id, setId ] = useState<number | undefined>()
   const columns = [
     { key: 'id', title: 'ID' },
-    { key: 'name', title: 'name' },
-    { key: 'avatar', title: 'avatar', render: (v: string) => (
+    { key: 'name', title: 'Name' },
+    { key: 'avatar', title: 'Photo', render: (v: string) => (
       <Image src={v} width={80} height={80} />
     )},
-    { key: 'profile', title: 'profile' },
-    { key: '-', title: 'actions', render: (_: void, record: IStaffModel) => (
+    { key: 'profile', title: 'Profile' },
+    { key: '-', title: 'Actions', render: (_: void, record: IStaffModel) => (
       <>
         {/* <Button
           className="mr-5"
@@ -99,7 +99,7 @@ function AdminManager() {
       >
         <Form.Item
           name="username"
-          label="name"
+          label="Name"
           rules={[{ required: true }]}
         >
           <Input />

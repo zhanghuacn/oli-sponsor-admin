@@ -23,8 +23,6 @@ function Dashboard() {
       })
   }, [])
 
-  console.log(data)
-
   return (
     <div className={classNames('tableLayout', css.layout)}>
       <div className={css.charts}>
@@ -63,13 +61,13 @@ function Dashboard() {
                   <div className={css.desc}>{v.description}</div>
                   <div className={css.position}>
                     <span>
-                      sold:
+                      Sold:
                       &nbsp;
                       {v.sold}
                     </span>
 
                     <span>
-                      income:
+                      Income:
                       &nbsp;
                       {v.income}
                     </span>
