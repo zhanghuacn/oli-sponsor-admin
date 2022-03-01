@@ -236,7 +236,7 @@ function EventsDetail() {
                         </span>
                       </>
                     )}
-                    extra="The width height ratio of the picture must be 375x350"
+                    extra="The width*height ratio of the picture must be 375x350"
                     rules={[
                       { required: true, message: 'Please enter cover pictures' }
                     ]}
