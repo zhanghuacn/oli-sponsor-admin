@@ -19,8 +19,6 @@
     "aws-sdk": "^2.1048.0",
     "babel-plugin-import": "^1.13.3",
     "braft-editor": "git+https://github.com/jsckdao/braft-editor.git#iframe",
-    "braft-utils": "git+https://github.com/jsckdao/braft-utils.git#iframe",
-    "braft-convert": "git+https://github.com/jsckdao/braft-convert.git#iframe",
     "classnames": "^2.3.1",
     "craco-less-fix": "^1.21.1",
     "echarts": "^5.2.2",

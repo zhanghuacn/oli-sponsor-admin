@@ -1048,14 +1048,14 @@
     core-js-pure "^3.19.0"
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.0.0", "@babel/runtime@^7.10.1", "@babel/runtime@^7.10.2", "@babel/runtime@^7.10.4", "@babel/runtime@^7.11.1", "@babel/runtime@^7.11.2", "@babel/runtime@^7.12.5", "@babel/runtime@^7.16.3", "@babel/runtime@^7.5.5", "@babel/runtime@^7.7.6", "@babel/runtime@^7.7.7", "@babel/runtime@^7.8.4", "@babel/runtime@^7.9.2":
+"@babel/runtime@^7.0.0", "@babel/runtime@^7.10.1", "@babel/runtime@^7.10.2", "@babel/runtime@^7.10.4", "@babel/runtime@^7.11.1", "@babel/runtime@^7.11.2", "@babel/runtime@^7.12.5", "@babel/runtime@^7.16.3", "@babel/runtime@^7.7.6", "@babel/runtime@^7.7.7", "@babel/runtime@^7.8.4", "@babel/runtime@^7.9.2":
   version "7.16.5"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.16.5.tgz#7f3e34bf8bdbbadf03fbb7b1ea0d929569c9487a"
   integrity sha512-TXWihFIS3Pyv5hzR7j6ihmeLkZfrXGxAr5UfSl8CHf+6q/wpiYDkUau0czckpYG8QmnCIuPpdLtuA9VmuGGyMA==
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.16.7":
+"@babel/runtime@^7.16.7", "@babel/runtime@^7.5.5":
   version "7.17.2"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.17.2.tgz#66f68591605e59da47523c631416b18508779941"
   integrity sha512-hzeyJyMA1YGdJTuWU0e/j4wKXrU4OMFvY2MSlaI9B7VQb0r5cxTE3EAIS2Q7Tn2RIcDkRvTA/v2JsAEhxe99uw==
@@ -2723,27 +2723,19 @@ braces@^3.0.1, braces@~3.0.2:
 
 "braft-convert@git+https://github.com/jsckdao/braft-convert.git#iframe":
   version "2.3.0"
-  uid "138776cf58e8d1c11412dc9b48e2ea72c4d445d6"
   resolved "git+https://github.com/jsckdao/braft-convert.git#138776cf58e8d1c11412dc9b48e2ea72c4d445d6"
-  dependencies:
-    draft-convert "^2.0.0"
-    draft-js "^0.10.3"
-
-"braft-convert@git+ssh://git@github.com:jsckdao/braft-convert.git#iframe":
-  version "2.3.0"
-  resolved "git+ssh://git@github.com:jsckdao/braft-convert.git#138776cf58e8d1c11412dc9b48e2ea72c4d445d6"
   dependencies:
     draft-convert "^2.0.0"
     draft-js "^0.10.3"
 
 "braft-editor@git+https://github.com/jsckdao/braft-editor.git#iframe":
   version "2.3.8"
-  resolved "git+https://github.com/jsckdao/braft-editor.git#dc2d623f91465832d651f0882ffa7a5e8a4734d7"
+  resolved "git+https://github.com/jsckdao/braft-editor.git#3bb5c249d4b449d03175eb202075fab37c73f1aa"
   dependencies:
     "@babel/runtime" "^7.0.0"
-    braft-convert "git+ssh://git@github.com:jsckdao/braft-convert.git#iframe"
-    braft-finder "git+ssh://git@github.com:jsckdao/braft-finder.git#iframe"
-    braft-utils "git+ssh://git@github.com:jsckdao/braft-utils.git#iframe"
+    braft-convert "git+https://github.com/jsckdao/braft-convert.git#iframe"
+    braft-finder "git+https://github.com/jsckdao/braft-finder.git#iframe"
+    braft-utils "git+https://github.com/jsckdao/braft-utils.git#iframe"
     draft-convert "^2.0.0"
     draft-js "^0.10.3"
     draft-js-multidecorators "^1.0.0"
@@ -2751,20 +2743,15 @@ braces@^3.0.1, braces@~3.0.2:
     immutable "~3.7.4"
     sass "^1.49.9"
 
-"braft-finder@git+ssh://git@github.com:jsckdao/braft-finder.git#iframe":
+"braft-finder@git+https://github.com/jsckdao/braft-finder.git#iframe":
   version "0.0.21"
-  resolved "git+ssh://git@github.com:jsckdao/braft-finder.git#220ce855e19cee7ead6c893651ce6ffc0ebbbbf0"
+  resolved "git+https://github.com/jsckdao/braft-finder.git#220ce855e19cee7ead6c893651ce6ffc0ebbbbf0"
   dependencies:
     sass "^1.49.9"
 
 "braft-utils@git+https://github.com/jsckdao/braft-utils.git#iframe":
   version "3.0.12"
-  uid a44ded44c46474f7b4f88c81bfa0886c220da178
   resolved "git+https://github.com/jsckdao/braft-utils.git#a44ded44c46474f7b4f88c81bfa0886c220da178"
-
-"braft-utils@git+ssh://git@github.com:jsckdao/braft-utils.git#iframe":
-  version "3.0.12"
-  resolved "git+ssh://git@github.com:jsckdao/braft-utils.git#a44ded44c46474f7b4f88c81bfa0886c220da178"
 
 browser-process-hrtime@^1.0.0:
   version "1.0.0"
