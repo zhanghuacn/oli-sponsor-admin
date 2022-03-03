@@ -1,12 +1,12 @@
-import { Button, message, Upload } from "antd"
-import { RcFile } from "antd/lib/upload"
+import { Input, message } from "antd"
 import BraftEditor, { BraftEditorProps, ControlType, EditorState } from "braft-editor"
 import classNames from "classnames"
-import React, { useEffect, useMemo, useRef, useState } from "react"
+import { useMemo, useRef, useState } from "react"
 import css from './index.module.less'
 import 'braft-editor/dist/index.css'
 import { AwsUploader } from "../../utils/upload"
-import { PictureOutlined } from '@ant-design/icons'
+import { PictureOutlined, CodeOutlined } from '@ant-design/icons'
+const { ContentUtils } = require('braft-utils')
 
 export interface IRichEditorProps extends BraftEditorProps {
   value?: string
@@ -25,6 +25,7 @@ export function RichEditor({
   const [ val, setVal ] = useState(BraftEditor.createEditorState(value, {
     fontSize: 16
   }))
+  const [ codeInsertionValue, setCodeInsertionValue ] = useState('')
   const uploadIpt = useRef<HTMLInputElement>(null)
   const controls = useMemo<ControlType[]>(() => [
     'undo', 'redo', 'separator',
@@ -38,57 +39,86 @@ export function RichEditor({
   const extendControls: any[] = [
     {
       key: 'antd-uploader',
-      type: 'component',
-      component: (
-        <button
-          className={classNames(css.upload, 'control-item', 'button')}
-          onClick={() => {
-            uploadIpt.current?.click()
-          }}
-        >
-          <input
-            type="file"
-            ref={uploadIpt}
-            accept="image/*"
-            onChange={(evt) => {
-              const files = evt.target.files;
-              if(files && files.length > 0) {
-                const image = files[0]
-                AwsUploader.upload(image)
-                  .then((res) => {
-                    if(res) {
-                      const { ContentUtils } = require('braft-utils')
-                      setVal(ContentUtils.insertMedias(val, [{
-                        type: 'IMAGE',
-                        url: res
-                      }]))
-                    }
-                  })
-                  .catch((err) => {
-                    message.error(err.message)
-                  })
-              }
-            }}
+      type: 'button',
+      text: <PictureOutlined />,
+      title: 'Insert image',
+      onClick() {
+        uploadIpt.current?.click()
+      }
+    }, {
+      key: 'iframe-insertion',
+      type: 'modal',
+      text: <CodeOutlined />,
+      title: 'Insert video',
+      modal: {
+        id: 'braft-editor-code-insertion',
+        title: 'Insert video',
+        width: 600,
+        className: css.richCodeInsertion,
+        children: (
+          <Input
+            value={codeInsertionValue}
+            onChange={(evt) => setCodeInsertionValue(evt.target.value)}
           />
-          <PictureOutlined />
-        </button>
-      )
+        ),
+        confirmable: true,
+        closeOnConfirm: true,
+        closeOnCancel: true,
+        onConfirm: () => {
+          setCodeInsertionValue((html) => {
+            setVal((val: any) => {
+              return ContentUtils.insertMedias(val, [{
+                type: 'IFRAME',
+                url: html
+              }])
+            })
+            return ''
+          })
+        }
+      }
     }
   ]
 
   return (
-    <BraftEditor
-      {...rest}
-      value={val}
-      onChange={(v: EditorState) => {
-        setVal(v)
-        onChange && onChange(v?.toHTML())
-      }}
-      extendControls={extendControls}
-      controls={controls}
-      className={classNames(css.richEditor, className)}
-      placeholder={placeholder}
-      language="en"
-    />
+    <>
+      <BraftEditor
+        {...rest}
+        value={val}
+        onChange={(v: EditorState) => {
+          setVal(v)
+          onChange && onChange(v?.toHTML())
+        }}
+        extendControls={extendControls}
+        controls={controls}
+        className={classNames(css.richEditor, className)}
+        placeholder={placeholder}
+        language="en"
+      />
+
+      <input
+        type="file"
+        ref={uploadIpt}
+        className={css.richUploadIpt}
+        accept="image/*"
+        onChange={(evt) => {
+          const files = evt.target.files;
+          if(files && files.length > 0) {
+            const image = files[0]
+            AwsUploader.upload(image)
+              .then((res) => {
+                if(res) {
+                  setVal(ContentUtils.insertMedias(val, [{
+                    type: 'IMAGE',
+                    url: res
+                  }]))
+                }
+              })
+              .catch((err) => {
+                message.error(err.message)
+              })
+          }
+        }}
+      />
+    </>
   )
 }
