@@ -18,6 +18,7 @@ const Login = defaultFallbackLoadable(() => import('../pages/Login'))
 const AdminManager = defaultFallbackLoadable(() => import('../pages/AdminManager'))
 const Events = defaultFallbackLoadable(() => import('../pages/Events'))
 const EventsDetail = defaultFallbackLoadable(() => import('./Events/Detail'))
+const EventsGiftApplicationUser = defaultFallbackLoadable(() => import('../pages/Events/GiftApplicationUser'))
 const Register = defaultFallbackLoadable(() => import('../pages/Register'))
 const Search = defaultFallbackLoadable(() => import('../pages/Search'))
 const MineEditProfiles = defaultFallbackLoadable(() => import('../pages/Mine/EditProfiles'))
@@ -30,6 +31,7 @@ function Routes() {
     { path: '/admin', element: <AdminManager /> },
     { path: '/events', element: <Events /> },
     { path: '/events/detail/:id', element: <EventsDetail /> },
+    { path: '/events/gifts/:id', element: <EventsGiftApplicationUser /> },
     { path: '/register', element: <Register /> },
     { path: '/search', element: <Search /> },
     { path: '/setting', element: <MineEditProfiles /> },

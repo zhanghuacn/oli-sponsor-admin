@@ -92,17 +92,19 @@ interface IPageTableProps<T> {
   columns: Array<IPageTableColumn<T>>
 }
 
+type ITableProps<T> = Omit<TableProps<T>, 'columns'>
+
 export default function PageTable<T extends Object>({
   store,
   columns,
   className,
   ...rest
-}: IPageTableProps<T> & TableProps<T>) {
+}: IPageTableProps<T> & ITableProps<T>) {
   return (
     <Observer>
       {() => (
         <Table
-          {...rest}
+          {...omit(rest, 'columns')}
           className={classNames(className, css.pageTable)}
           rowKey="id"
           loading={store.loading}
