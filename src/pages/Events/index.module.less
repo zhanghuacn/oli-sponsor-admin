@@ -448,3 +448,14 @@
   width: 100%;
   height: calc(100% - 54px);
 }
+
+.innerTable {
+  padding: 0 !important;
+
+  :global {
+    .ant-table {
+      height: auto !important;
+      margin: 0 !important;
+    }
+  }
+}

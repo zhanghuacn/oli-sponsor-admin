@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import css from './index.module.less'
 import { Button, Carousel, Col, Collapse, Form, Input, InputNumber, message, Modal, Row, Steps } from 'antd'
 import classNames from 'classnames'
-import { AuditOutlined } from '@ant-design/icons'
+import { AuditOutlined, GiftOutlined } from '@ant-design/icons'
 import { ILoadingLayoutRef, LoadingLayout } from '../../components/Layout/LoadingLayout'
 import { IEventsDetailModel, IEventsLotteryPrizeModel } from '../../models'
 import { EventsService } from '../../services'
@@ -35,6 +35,7 @@ interface IEventsDetailState {
   get isShowLotteries(): boolean | undefined
   get isShowSales(): boolean | undefined
   get isShowStaff(): boolean | undefined
+  get isShowGift(): boolean | undefined
 }
 
 function EventsDetail() {
@@ -68,6 +69,10 @@ function EventsDetail() {
       const { data } = state as IEventsDetailState
       return data?.staffs && data.staffs.length > 0
     },
+    get isShowGift() {
+      const { data } = state as IEventsDetailState
+      return data?.gifts && data?.gifts?.length > 0
+    },
     setStep(step: number) {
       state.step = step
     },
@@ -82,6 +87,9 @@ function EventsDetail() {
       const initialValues: any = {}
       if(data?.sales && data.sales?.length > 0) {
         initialValues.sales = data.sales
+      }
+      if(data?.gifts && data.gifts?.length > 0) {
+        initialValues.gifts = data.gifts
       }
       const prizes = data?.lotteries?.reduce<IEventsLotteryPrizeModel[]>((res, v) => {
         if(v.prizes?.length > 0) {
@@ -160,20 +168,6 @@ function EventsDetail() {
                     <Input />
                   </Form.Item>
                 </Col>
-
-                {/* <Col span={6}>
-                  <Form.Item
-                    {...field}
-                    label="Sponsor"
-                    name={[field.name, 'sponsor', 'id']}
-                  >
-                    <Select>
-                      {store.sponsorMap.list?.map((v) => (
-                        <Select.Option key={v.id} value={v.id}>{v.name}</Select.Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                </Col> */}
 
                 <Col span={6}>
                   <Form.Item
@@ -360,6 +354,7 @@ function EventsDetail() {
             <Collapse
               ghost
               className={css.collapseWrapper}
+              defaultActiveKey={['specialties', 'timeline', 'lottery', 'sale', 'staff', 'gift']}
             >
               {state.isShowSpecialty && (
                 <Collapse.Panel
@@ -466,6 +461,32 @@ function EventsDetail() {
                 </Collapse.Panel>
               )}
 
+              {state.isShowGift && (
+                <Collapse.Panel
+                  header="Charity gifts"
+                  key="gift"
+                  className={css.sale}
+                >
+                  <ul>
+                    {state.data?.gifts?.map((v, i) => {
+                      return (
+                        <li key={i}>
+                          <img src={v.images?.[0]} />
+                          <div className={css.info}>
+                            <div className={css.name}>
+                              {v.name}
+                            </div>
+                            <div className={css.desc}>
+                              {v.description}
+                            </div>
+                          </div>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                </Collapse.Panel>
+              )}
+
               {state.isShowStaff && (
                 <Collapse.Panel
                   header="Staff"
@@ -501,6 +522,7 @@ function EventsDetail() {
               {state.isShowTimeline && <Steps.Step title="Timeline" />}
               {state.isShowLotteries && <Steps.Step title="Raffle" />}
               {state.isShowSales && <Steps.Step title="Charity sale" />}
+              {state.isShowGift && <Steps.Step title="Charity gifts" />}
               {state.isShowStaff && <Steps.Step title="Staff" />}
             </Steps>
           </div>
@@ -515,6 +537,15 @@ function EventsDetail() {
         >
           Edit
         </Button>
+
+        <Button
+          icon={<GiftOutlined />}
+          onClick={() => {
+            navigate(`/events/gifts/${id}`)
+          }}
+        >
+          Gift application user list
+        </Button>
       </div>
 
       <Modal
@@ -526,7 +557,7 @@ function EventsDetail() {
         }}
         footer={
           <div>
-            {state.step === 1 && (
+            {state.step >= 1 && (
               <Button onClick={() => {
                 state.setStep(state.step - 1)
               }}>
@@ -534,7 +565,7 @@ function EventsDetail() {
               </Button>
             )}
 
-            {state.step === 0 && (
+            {state.step < 2 && (
               <Button  onClick={async () => {
                 try {
                   await form.validateFields()
@@ -549,7 +580,7 @@ function EventsDetail() {
               </Button>
             )}
 
-            {state.step === 1 && (
+            {state.step === 2 && (
               <Button loading={state.submitting} onClick={state.submit}>
                 Finish
               </Button>
@@ -567,8 +598,10 @@ function EventsDetail() {
             <Steps current={state.step}>
               <Steps.Step title={`Step 1`} description="Raffle prizes" />
               <Steps.Step title={`Step 2`} description="Sales" />
+              <Steps.Step title={`Step 2`} description="Gifts" />
             </Steps>
           </div>
+
           {state.step === 0 && (
             <>
               <div className={css.topTitle}>
@@ -582,6 +615,7 @@ function EventsDetail() {
               </div>
             </>
           )}
+
           {state.step === 1 && (
             <>
               <div className={css.topTitle}>
@@ -592,6 +626,73 @@ function EventsDetail() {
                 {renderSales({
                   name: 'sales'
                 })}
+              </div>
+            </>
+          )}
+
+          {state.step === 2 && (
+            <>
+              <div className={css.topTitle}>
+                Charity gift
+              </div>
+
+              <div className={css.formBody}>
+                <Form.List name="gifts">
+                  {(fields, { add, remove }) => (
+                    <>
+                      {fields.map((field) => (
+                        <div className={css.lotteryItem} key={field.key}>
+                          <Row gutter={10}>
+                            <Col span={6}>
+                              <Form.Item
+                                {...field}
+                                label="Name"
+                                name={[field.name, 'name']}
+                                rules={[{ required: true }]}
+                              >
+                                <Input />
+                              </Form.Item>
+                            </Col>
+
+                            <Col span={14}>
+                              <Form.Item
+                                {...field}
+                                name={[field.name, "description"]}
+                                label="Description"
+                                rules={[
+                                  { required: true }
+                                ]}
+                              >
+                                <Input.TextArea autoSize={{ minRows: 1 }} />
+                              </Form.Item>
+                            </Col>
+
+                            <Col span={24}>
+                              <Form.Item
+                                {...field}
+                                name={[field.name, "images"]}
+                                label={(
+                                  <>
+                                    Cover pictures
+                                    <span className={css.privateDesc}>
+                                    You can upload 1~5 pictures to describe your event
+                                    </span>
+                                  </>
+                                )}
+                                extra="The width*height ratio of the picture must be 375x350"
+                                rules={[
+                                  { required: true, message: 'Please enter cover pictures' }
+                                ]}
+                              >
+                                <MultiUpload widthRatio={375} heightRatio={350} />
+                              </Form.Item>
+                            </Col>
+                          </Row>
+                        </div>
+                      ))}
+                    </>
+                  )}
+                </Form.List>
               </div>
             </>
           )}

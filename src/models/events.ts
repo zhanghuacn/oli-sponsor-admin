@@ -58,6 +58,25 @@ export interface IEventsLotteryDetailModel extends IEventsLotteryModel {
   prizes: IEventsLotteryPrizeModel[]
 }
 
+export interface IEventsGiftModel {
+  id: number
+  name: string
+  description: string
+  images: string[]
+}
+
+export interface IEventsGiftUserModel {
+  id: number
+  name: string
+  username: string
+  avatar: string
+  email: string
+  phone: string
+  first_name: string
+  middle_name: string
+  last_name: string
+}
+
 export interface IEventsDetailModel {
   basic: {
     id: number
@@ -95,4 +114,5 @@ export interface IEventsDetailModel {
     images: string[]
   }[]
   staffs: IStaffModel[]
+  gifts: IEventsGiftModel[]
 }
