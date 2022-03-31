@@ -71,6 +71,8 @@ const cssRegex = /\.css$/;
 const cssModuleRegex = /\.module\.css$/;
 const sassRegex = /\.(scss|sass)$/;
 const sassModuleRegex = /\.module\.(scss|sass)$/;
+const lessRegex = /\.(less)$/;
+const lessModuleRegex = /\.module\.(less)$/;
 
 const hasJsxRuntime = (() => {
   if (process.env.DISABLE_NEW_JSX_TRANSFORM === 'true') {
@@ -84,6 +86,22 @@ const hasJsxRuntime = (() => {
     return false;
   }
 })();
+
+// 读取 .env.local 环境变量
+const dotenvLoad = require('dotenv-load');
+dotenvLoad();
+
+function getPublicEnvVariables() {
+  const variables = {}
+
+  for(const k in process.env) {
+    if(/^CHARITY_PUBLIC/.test(k)) {
+      variables[k] = JSON.stringify(process.env[k])
+    }
+  }
+
+  return variables
+}
 
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
@@ -167,6 +185,41 @@ module.exports = function (webpackEnv) {
       },
     ].filter(Boolean);
     if (preProcessor) {
+      const loader = {
+        loader: require.resolve(preProcessor),
+        options: {
+          sourceMap: true,
+        },
+      };
+
+      if (preProcessor === "less-loader") {
+        loader.options.implementation = require.resolve("less");
+        loader.options.lessOptions = {
+          javascriptEnabled: true,
+          modifyVars: {
+            '@primary-color': '#201f1e',
+            '@success-color': '#52c41a',
+            '@warning-color': '#e0bb7c',
+            '@error-color': '#e24d31',
+            '@heading-color': '#201f1e',
+            '@text-color': '#5a5855',
+            '@text-color-secondary': '#a6a39e',
+            '@border-color-split': '#dbdad8',
+            '@menu-item-active-bg': '@warning-color',
+            '@menu-dark-bg': '@primary-color',
+            '@menu-dark-submenu-bg': '@primary-color',
+            '@menu-dark-inline-submenu-bg': '@primary-color',
+            '@menu-popup-bg': '@primary-color',
+            '@layout-header-background': '@primary-color',
+            '@layout-trigger-background': '@primary-color',
+            '@rate-star-color': '#e0bb7c',
+            "@select-item-selected-bg": '#f5f5f5',
+            "@calendar-item-active-bg": '#f5f5f5',
+            "@primary-1": '#f5f5f5'
+          }
+        }
+      }
+
       loaders.push(
         {
           loader: require.resolve('resolve-url-loader'),
@@ -175,12 +228,7 @@ module.exports = function (webpackEnv) {
             root: paths.appSrc,
           },
         },
-        {
-          loader: require.resolve(preProcessor),
-          options: {
-            sourceMap: true,
-          },
-        }
+        loader
       );
     }
     return loaders;
@@ -333,6 +381,9 @@ module.exports = function (webpackEnv) {
           babelRuntimeRegenerator,
         ]),
       ],
+      fallback: {
+        util: false
+      }
     },
     module: {
       strictExportPresence: true,
@@ -417,8 +468,10 @@ module.exports = function (webpackEnv) {
                     },
                   ],
                 ],
-                
+
                 plugins: [
+                  ["@babel/plugin-syntax-dynamic-import"],
+                  [require.resolve('babel-plugin-import'), { libraryName: 'antd', style: true }],
                   isEnvDevelopment &&
                     shouldUseReactRefresh &&
                     require.resolve('react-refresh/babel'),
@@ -451,7 +504,7 @@ module.exports = function (webpackEnv) {
                 cacheDirectory: true,
                 // See #6846 for context on why cacheCompression is disabled
                 cacheCompression: false,
-                
+
                 // Babel sourcemaps are needed for debugging into node_modules
                 // code.  Without the options below, debuggers like VSCode
                 // show incorrect code and set breakpoints on the wrong lines.
@@ -541,6 +594,45 @@ module.exports = function (webpackEnv) {
                 'sass-loader'
               ),
             },
+            // Opt-in support for SASS (using .less or .sass extensions).
+            // By default we support SASS Modules with the
+            // extensions .module.less or .module.sass
+            {
+              test: lessRegex,
+              exclude: lessModuleRegex,
+              use: getStyleLoaders(
+                {
+                  importLoaders: 2,
+                  sourceMap: isEnvProduction
+                    ? shouldUseSourceMap
+                    : isEnvDevelopment,
+                },
+                'less-loader'
+              ),
+              // Don't consider CSS imports dead code even if the
+              // containing package claims to have no side effects.
+              // Remove this when webpack adds a warning or an error for this.
+              // See https://github.com/webpack/webpack/issues/6571
+              sideEffects: true,
+            },
+            // Adds support for CSS Modules, but using SASS
+            // using the extension .module.scss or .module.sass
+            {
+              test: lessModuleRegex,
+              use: getStyleLoaders(
+                {
+                  importLoaders: 2,
+                  sourceMap: isEnvProduction
+                    ? shouldUseSourceMap
+                    : isEnvDevelopment,
+                  modules: {
+                    mode: 'local',
+                    getLocalIdent: getCSSModuleLocalIdent,
+                  },
+                },
+                'less-loader'
+              ),
+            },
             // "file" loader makes sure those assets get served by WebpackDevServer.
             // When you `import` an asset, you get its (virtual) filename.
             // In production, they would get copied to the `build` folder.
@@ -608,6 +700,7 @@ module.exports = function (webpackEnv) {
       // during a production build.
       // Otherwise React will be compiled in the very slow development mode.
       new webpack.DefinePlugin(env.stringified),
+      new webpack.DefinePlugin(getPublicEnvVariables()),
       // Experimental hot reloading for React .
       // https://github.com/facebook/react/tree/main/packages/react-refresh
       isEnvDevelopment &&
