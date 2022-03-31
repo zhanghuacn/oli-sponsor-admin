@@ -35,7 +35,7 @@ class _AwsUploader {
       throw new Error("Please choose a file to upload first.")
     }
 
-    if(file.size / 1024 / 1024 / 10 >= 2) {
+    if(file.size / 1024 / 1024 >= 2) {
       throw new Error("The file size is too large and exceeds 2MB")
     }
 

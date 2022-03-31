@@ -59,7 +59,10 @@ export function BackdropFormItem({
             setProgress(0)
             const image = files[0]
             beforeUpload(image)
-              .then((res: any) => AwsUploader.upload(res))
+              .then((res: any) => {
+                setProgress(0)
+                return AwsUploader.upload(res)
+              })
               .then((res: any) => {
                 onChange?.(res)
               })
@@ -88,6 +91,7 @@ export function BackdropFormItem({
     <ImgCrop
       rotate
       aspect={350 / 150}
+      minZoom={.1}
     >
       <UploadComponent />
     </ImgCrop>
@@ -138,7 +142,10 @@ export function AvatarFormItem({
             setProgress(0)
             const image = files[0]
             beforeUpload(image)
-              .then((res: any) => AwsUploader.upload(res))
+              .then((res: any) => {
+                setProgress(0)
+                return AwsUploader.upload(res)
+              })
               .then((res: any) => {
                 onChange?.(res)
               })
@@ -164,6 +171,7 @@ export function AvatarFormItem({
     <ImgCrop
       rotate
       aspect={1}
+      minZoom={.1}
     >
       <UploadComponent />
     </ImgCrop>

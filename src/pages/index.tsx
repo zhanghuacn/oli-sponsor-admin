@@ -3,6 +3,7 @@ import en_US from 'antd/lib/locale/en_US'
 import { BrowserRouter, useLocation, useRoutes } from "react-router-dom"
 import { StoreProvider } from "../components/Hooks/StoreProvider"
 import './index.less'
+import '../assets/fonts/iconfont/iconfont.css'
 import loadable from "@loadable/component"
 import { AdminLayout } from "../components/Layout"
 import { contains } from "underscore"

@@ -85,7 +85,7 @@ function Dashboard() {
             <span className={css.num}>{data?.events?.length || 0}</span>
           </div>
           <ul className={css.body}>
-            {data?.events?.map((v) => (
+            {data?.events?.map?.((v) => (
               <li key={v.id}>
                 <img src={v.image} />
                 <div className={css.info}>
