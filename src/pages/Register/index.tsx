@@ -91,6 +91,7 @@ export function BackdropFormItem({
     <ImgCrop
       rotate
       aspect={350 / 150}
+      minZoom={.1}
     >
       <UploadComponent />
     </ImgCrop>
@@ -170,6 +171,7 @@ export function AvatarFormItem({
     <ImgCrop
       rotate
       aspect={1}
+      minZoom={.1}
     >
       <UploadComponent />
     </ImgCrop>
