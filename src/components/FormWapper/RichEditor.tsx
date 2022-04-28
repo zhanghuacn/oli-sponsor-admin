@@ -1,7 +1,7 @@
 import { Input, message } from "antd"
 import BraftEditor, { BraftEditorProps, ControlType, EditorState } from "braft-editor"
 import classNames from "classnames"
-import { useMemo, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import css from './index.module.less'
 import 'braft-editor/dist/index.css'
 import { AwsUploader } from "../../utils/upload"
@@ -78,6 +78,14 @@ export function RichEditor({
       }
     }
   ]
+
+  useEffect(() => {
+    if(value !== val?.toHTML()) {
+      setVal(BraftEditor.createEditorState(value, {
+        fontSize: 16
+      }))
+    }
+  }, [value])
 
   return (
     <>

@@ -8,7 +8,7 @@ import { MyButton, RichEditor } from '../../../components/FormWapper';
 import { useForm } from 'antd/lib/form/Form';
 import { useSearchParams } from 'react-router-dom';
 import { BackdropFormItem, AvatarFormItem } from '../../Register'
-import { ILoadingLayoutRef, LoadingLayout, onLoadingLayoutAsyncWrapper } from "../../../components/Layout/LoadingLayout";
+import { ILoadingLayoutRef, LoadingLayout } from "../../../components/Layout/LoadingLayout";
 import { observer, useLocalObservable } from "mobx-react-lite";
 import { AdminService } from "../../../services";
 import { contains } from "underscore";
@@ -20,14 +20,16 @@ function EditProfiles() {
   const state = useLocalObservable(() => ({
     submitting: false,
     stripeType: '',
-    init: onLoadingLayoutAsyncWrapper(async () => {
-      const data = await AdminService.getSponsorDetail()
-      form.setFieldsValue(data)
-      const t = searchParams.get('stripe_type')
-      if(contains(['refresh', 'return'], t)) {
-        state.stripeType = t as string
-      }
-    }, layout),
+    init() {
+      layout.current?.onAsyncHandle(async () => {
+        const data = await AdminService.getSponsorDetail()
+        form.setFieldsValue(data)
+        const t = searchParams.get('stripe_type')
+        if(contains(['refresh', 'return'], t)) {
+          state.stripeType = t as string
+        }
+      })()
+    },
     async submit() {
       await form.validateFields()
       const data = form.getFieldsValue()
@@ -79,7 +81,7 @@ function EditProfiles() {
               label="Name"
               name="name"
             >
-              <Input />
+              <Input readOnly />
             </Form.Item>
 
             <Form.Item
