@@ -1,5 +1,7 @@
 import { Empty, Spin } from "antd"
+import classNames from "classnames"
 import { forwardRef, useImperativeHandle, useState } from "react"
+import css from './index.module.less'
 
 export interface ILoadingLayoutProps {
   children: React.ReactNode
@@ -9,6 +11,7 @@ export interface ILoadingLayoutProps {
 export interface ILoadingLayoutRef {
   setLoading: (v: boolean) => void
   setError: (err: Error) => void
+  onAsyncHandle: any
 }
 
 const _LoadingLayout = function ({
@@ -20,11 +23,28 @@ const _LoadingLayout = function ({
 
   useImperativeHandle(_ref, () => ({
     setLoading,
-    setError
-  }))
+    setError,
+    onAsyncHandle<T>(fn: (...rest: any[]) => Promise<T[]>) {
+      return async (...rest: any[]) => {
+        try {
+          setLoading(true)
+          const data = await fn(...rest)
+          if(data?.length === 0) {
+            setError(new Error('no data'))
+          }
+        } catch(err) {
+          if(err instanceof Error) {
+            setError(err)
+          }
+        } finally {
+          setLoading(false)
+        }
+      }
+    }
+  }) as ILoadingLayoutRef)
 
   return (
-    <Spin spinning={loading} wrapperClassName={className}>
+    <Spin spinning={loading} wrapperClassName={classNames(className, css.loadingLayout)}>
       {
         err
         ? <Empty description={err.message} />
@@ -32,21 +52,6 @@ const _LoadingLayout = function ({
       }
     </Spin>
   )
-}
-
-export function onLoadingLayoutAsyncWrapper(fn: (...rest: any[]) => Promise<void>, layout: React.MutableRefObject<ILoadingLayoutRef | undefined>) {
-  return async (...rest: any[]) => {
-    try {
-      layout.current?.setLoading(true)
-      await fn(...rest)
-    } catch(err) {
-      if(err instanceof Error) {
-        layout.current?.setError(err)
-      }
-    } finally {
-      layout.current?.setLoading(false)
-    }
-  }
 }
 
 export const LoadingLayout = forwardRef(_LoadingLayout)
