@@ -83,7 +83,7 @@ class _AwsUploader {
       }
     });
     await upload.promise()
-    return `${CHARITY_PUBLIC_AWS_S3_STATIC_HOST}/${this.albumBucketName}/${filename}`
+    return `${CHARITY_PUBLIC_AWS_S3_STATIC_HOST}/${filename}`
   }
 }
 
