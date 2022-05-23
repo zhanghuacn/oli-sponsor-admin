@@ -39,8 +39,8 @@ class _AwsUploader {
       throw new Error('The file format is not supported')
     }
 
-    if(file.size / 1024 / 1024 >= 2) {
-      throw new Error("The file size is too large and exceeds 2MB")
+    if(file.size / 1024 / 1024 >= 1.5) {
+      throw new Error("The file size is too large and exceeds 1.5MB")
     }
 
     // 当比例配置有值时
