@@ -35,8 +35,12 @@ class _AwsUploader {
       throw new Error("Please choose a file to upload first.")
     }
 
-    if(file.size / 1024 / 1024 / 10 >= 2) {
-      throw new Error("The file size is too large and exceeds 2MB")
+    if(file.type === 'image/avif') {
+      throw new Error('The file format is not supported')
+    }
+
+    if(file.size / 1024 / 1024 >= 1.5) {
+      throw new Error("The file size is too large and exceeds 1.5MB")
     }
 
     // 当比例配置有值时
@@ -83,7 +87,7 @@ class _AwsUploader {
       }
     });
     await upload.promise()
-    return `${CHARITY_PUBLIC_AWS_S3_STATIC_HOST}/${this.albumBucketName}/${filename}`
+    return `${CHARITY_PUBLIC_AWS_S3_STATIC_HOST}/${filename}`
   }
 }
 

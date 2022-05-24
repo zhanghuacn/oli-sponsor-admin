@@ -30,8 +30,8 @@ function EventsGiftApplicationUser() {
     const columns = [
       { key: 'id', title: 'ID' },
       { key: 'name', title: 'Name' },
-      { key: 'avatar', title: 'Avatar', render: (v: string[]) => (
-        <Image src={v?.[0]} width={80} height={80} />
+      { key: 'avatar', title: 'Avatar', render: (v: string) => (
+        <Image src={v} width={80} height={80} />
       )},
       { key: 'email', title: 'Email' },
       { key: 'phone', title: 'Phone' },
